@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 3.17)
+project(OpenGL)
+
+set(CMAKE_CXX_STANDARD 20)
+
+find_package(OpenGL REQUIRED)
+
+# Turn off redunant targets
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "GLFW lib only" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "GLFW lib only" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "GLFW lib only" FORCE)
+
+set(BUILD_UTILS OFF CACHE BOOL "GLEW lib only" FORCE)
+
+add_subdirectory("vendor/glfw")
+add_subdirectory("vendor/glew/build/cmake")
+
+add_executable(OpenGL
+               src/Application.cpp
+)
+
+target_include_directories(OpenGL
+                           PRIVATE "vendor/glwf/include"
+                           PRIVATE "vendor/glew/include"
+)
+
+target_link_libraries(OpenGL ${OPENGL_LIBRARIES} glfw glew_s)
+
+target_compile_definitions(OpenGL
+                           PRIVATE "GLEW_NO_GLU=1"
+                           PRIVATE "GLEW_STATIC=1"
+)
