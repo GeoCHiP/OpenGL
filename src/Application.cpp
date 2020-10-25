@@ -8,28 +8,9 @@
 #include <tuple>
 #include <csignal>
 
-#define ASSERT(x) if(!(x)) raise(SIGABRT)
-#define GLCall(x) GLClearError();\
-    x;\
-    ASSERT(GLLogCall(#x, __FILE__, __LINE__))
-
-static void GLClearError() {
-    while (glGetError() != GL_NO_ERROR);
-}
-
-static bool GLLogCall(const char *function, const char *file, int line) {
-    bool fail = false;
-    while (GLenum error = glGetError()) {
-        std::cout << "[OpenGL Error] (" << error << "): " << function << ' ' << file << ':' << line << std::endl;
-        fail = true;
-    }
-
-    if (fail)
-        return false;
-    else
-        return true;
-}
-
+#include "Renderer.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 static std::tuple<std::string, std::string> ParseShader(const std::string &filepath) {
     std::ifstream stream(filepath);
@@ -138,20 +119,14 @@ int main() {
     GLCall(glBindVertexArray(vao));
 
     // vertex buffer object
-    unsigned int vbo;
-    GLCall(glGenBuffers(1, &vbo));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
-    GLCall(glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW));
+    VertexBuffer vbo(positions, 4 * 2 * sizeof(float));
 
     // vertex attribute array (positions)
     GLCall(glEnableVertexAttribArray(0));
     GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
 
     // index buffer object
-    unsigned int ibo;
-    GLCall(glGenBuffers(1, &ibo));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
+    IndexBuffer ibo(indices, 6);
 
     auto[vertexShader, fragmentShader] = ParseShader("../resources/shaders/Basic.shader");
     unsigned int shader = CreateShader(vertexShader, fragmentShader);
@@ -162,8 +137,8 @@ int main() {
 
     GLCall(glBindVertexArray(0));
     GLCall(glUseProgram(0));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+    vbo.Unbind();
+    ibo.Unbind();
 
     float r = 0.5f;
     float increment = 0.05f;
@@ -194,8 +169,6 @@ int main() {
     }
 
     GLCall(glDeleteProgram(shader));
-    GLCall(glDeleteBuffers(1, &ibo));
-    GLCall(glDeleteBuffers(1, &vbo));
     GLCall(glDeleteVertexArrays(1, &vao));
 
     glfwTerminate();

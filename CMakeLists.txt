@@ -17,6 +17,9 @@ add_subdirectory("vendor/glew/build/cmake")
 
 add_executable(OpenGL
                src/Application.cpp
+               src/Renderer.cpp
+               src/VertexBuffer.cpp
+               src/IndexBuffer.cpp
 )
 
 target_include_directories(OpenGL
