@@ -22,11 +22,15 @@ add_executable(OpenGL
                src/IndexBuffer.cpp
                src/VertexArray.cpp
                src/Shader.cpp
+               src/Texture.cpp
+
+               vendor/stb_image/stb_image.cpp
 )
 
 target_include_directories(OpenGL
                            PRIVATE "vendor/glwf/include"
                            PRIVATE "vendor/glew/include"
+                           PRIVATE "vendor/stb_image"
 )
 
 target_link_libraries(OpenGL ${OPENGL_LIBRARIES} glfw glew_s)
