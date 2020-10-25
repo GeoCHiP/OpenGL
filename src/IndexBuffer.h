@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Renderer.h"
-
 class IndexBuffer {
 public:
     IndexBuffer(unsigned int *data, unsigned int count);

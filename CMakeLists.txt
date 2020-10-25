@@ -21,6 +21,7 @@ add_executable(OpenGL
                src/VertexBuffer.cpp
                src/IndexBuffer.cpp
                src/VertexArray.cpp
+               src/Shader.cpp
 )
 
 target_include_directories(OpenGL

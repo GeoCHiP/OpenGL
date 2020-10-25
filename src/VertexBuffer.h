@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Renderer.h"
-
 class VertexBuffer {
 public:
     VertexBuffer(float *data, unsigned int size);

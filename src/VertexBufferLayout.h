@@ -3,7 +3,6 @@
 #include "Renderer.h"
 
 #include <vector>
-
 #include <iostream>
 
 struct VertexAttribute {
