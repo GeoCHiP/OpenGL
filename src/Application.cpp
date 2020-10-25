@@ -3,7 +3,9 @@
 
 #include <iostream>
 
+#include "Renderer.h"
 #include "VertexBuffer.h"
+#include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
@@ -49,36 +51,36 @@ int main() {
         2, 3, 0
     };
 
-    VertexArray vao;
-    VertexBuffer vbo(positions, 4 * 2 * sizeof(float));
+    VertexArray va;
+    VertexBuffer vb(positions, 4 * 2 * sizeof(float));
 
     VertexBufferLayout layout;
     layout.Push<float>(2);
 
-    vao.AddBuffer(vbo, layout);
+    va.AddBuffer(vb, layout);
 
-    IndexBuffer ibo(indices, 6);
+    IndexBuffer ib(indices, 6);
 
     Shader shader("../resources/shaders/Basic.shader");
 
-    vao.Unbind();
-    vbo.Unbind();
-    ibo.Unbind();
+    va.Unbind();
+    vb.Unbind();
+    ib.Unbind();
     shader.Unbind();
+
+    Renderer renderer;
 
     float r = 0.5f;
     float increment = 0.05f;
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         /* Render here */
-        GLCall(glClear(GL_COLOR_BUFFER_BIT));
+        renderer.Clear();
 
         shader.Bind();
         shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
-        
-        vao.Bind();
 
-        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+        renderer.Draw(va, ib, shader);
 
         if (r > 1.0f)
             increment = -0.05f;
