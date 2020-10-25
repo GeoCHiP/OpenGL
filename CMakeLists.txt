@@ -14,6 +14,7 @@ set(BUILD_UTILS OFF CACHE BOOL "GLEW lib only" FORCE)
 
 add_subdirectory("vendor/glfw")
 add_subdirectory("vendor/glew/build/cmake")
+add_subdirectory("vendor/glm")
 
 add_executable(OpenGL
                src/Application.cpp
@@ -31,9 +32,10 @@ target_include_directories(OpenGL
                            PRIVATE "vendor/glwf/include"
                            PRIVATE "vendor/glew/include"
                            PRIVATE "vendor/stb_image"
+                           PRIVATE "vendor/glm"
 )
 
-target_link_libraries(OpenGL ${OPENGL_LIBRARIES} glfw glew_s)
+target_link_libraries(OpenGL ${OPENGL_LIBRARIES} glfw glew_s glm)
 
 target_compile_definitions(OpenGL
                            PRIVATE "GLEW_NO_GLU=1"

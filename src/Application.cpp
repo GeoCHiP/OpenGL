@@ -11,6 +11,9 @@
 #include "Shader.h"
 #include "Texture.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 int main() {
     GLFWwindow* window;
 
@@ -66,12 +69,15 @@ int main() {
 
     IndexBuffer ib(indices, 6);
 
+    glm::mat4 proj = glm::ortho(-1.0f, 1.0f, -0.75f, 0.75f, -1.0f, 1.0f);
+
     Shader shader("../resources/shaders/Basic.shader");
     shader.Bind();
 
     Texture texture("../resources/textures/logo.jpg");
     texture.Bind(0);
     shader.SetUniform1i("u_Texture", 0);
+    shader.SetUniformMat4f("u_MVP", proj);
 
     va.Unbind();
     vb.Unbind();
