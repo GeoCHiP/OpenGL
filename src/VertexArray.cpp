@@ -14,7 +14,7 @@ void VertexArray::AddBuffer(const VertexBuffer &vbo, const VertexBufferLayout &l
     Bind();
     vbo.Bind();
 
-    const auto &elements = layout.GetElements();
+    const auto &elements = layout.GetAttributes();
     unsigned int offset = 0;
     for (unsigned int i = 0; i < elements.size(); ++i) {
         GLCall(glEnableVertexAttribArray(i));

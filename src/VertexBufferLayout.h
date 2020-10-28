@@ -21,10 +21,10 @@ struct VertexAttribute {
 
 class VertexBufferLayout {
 public:
-    VertexBufferLayout() = default;
-    ~VertexBufferLayout() = default;
+    VertexBufferLayout() : m_Stride(0) {};
+    ~VertexBufferLayout() {};
 
-    const std::vector<VertexAttribute> &GetElements() const { return m_Elements; }
+    const std::vector<VertexAttribute> &GetAttributes() const { return m_Attributes; }
     unsigned int GetStride() const { return m_Stride; }
 
     template<typename T>
@@ -33,12 +33,12 @@ public:
     }
 
 private:
-    std::vector<VertexAttribute> m_Elements;
+    std::vector<VertexAttribute> m_Attributes;
     unsigned int m_Stride;
 };
 
 template<>
 inline void VertexBufferLayout::Push<float>(unsigned int count) {
-    m_Elements.push_back({ count, GL_FLOAT, GL_FALSE });
+    m_Attributes.push_back({ count, GL_FLOAT, GL_FALSE });
     m_Stride += count * VertexAttribute::GetSizeOfType(GL_FLOAT);
 }

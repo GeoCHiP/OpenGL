@@ -27,6 +27,7 @@ void Shader::Unbind() const {
 
 std::tuple<std::string, std::string> Shader::ParseShader(const std::string &filepath) {
     std::ifstream stream(filepath);
+    assert(stream.is_open());
     
     enum class ShaderType {
         NONE = -1, VERTEX = 0, FRAGMENT = 1
