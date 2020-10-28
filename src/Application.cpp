@@ -15,39 +15,39 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 int main() {
-    GLFWwindow* window;
-
-    /* Initialize the library */
-    if (!glfwInit())
+    if (glfwInit() == GLFW_FALSE) {
+        std::cerr << "Failed to initialize GLFW!" << std::endl;
         return -1;
+    }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
 
-    if (!window) {
+    if (window == NULL) {
+        std::cerr << "Failed to create a window and its opengl context!" << std::endl;
         glfwTerminate();
         return -1;
     }
 
-    /* Make the window's context current */
     glfwMakeContextCurrent(window);
-
     glfwSwapInterval(1);
 
-    if (glewInit() != GLEW_OK)
+    if (glewInit() != GLEW_OK) {
+        std::cerr << "Failed to initialize GLEW!" << std::endl;
         return -1;
+    }
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
     float positions[] = {
-        -0.5f, -0.5f, 0.0f, 0.0f, 
-         0.5f, -0.5f, 1.0f, 0.0f,
-         0.5f,  0.5f, 1.0f, 1.0f,
-        -0.5f,  0.5f, 0.0f, 1.0f
+        // positons      // texture coord
+        0.0f,    0.0f,   0.0f, 0.0f, 
+        200.0f,  0.0f,   1.0f, 0.0f,
+        200.0f,  200.0f, 1.0f, 1.0f,
+        0.0f,    200.0f, 0.0f, 1.0f
     }; 
 
     unsigned int indices[] = {
@@ -69,7 +69,7 @@ int main() {
 
     IndexBuffer ib(indices, 6);
 
-    glm::mat4 proj = glm::ortho(-1.0f, 1.0f, -0.75f, 0.75f, -1.0f, 1.0f);
+    glm::mat4 proj = glm::ortho(0.0f, 640.0f, 0.0f, 480.0f, -1.0f, 1.0f);
 
     Shader shader("../resources/shaders/Basic.shader");
     shader.Bind();
@@ -86,29 +86,11 @@ int main() {
 
     Renderer renderer;
 
-    float r = 0.5f;
-    float increment = 0.05f;
-    /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
-        /* Render here */
         renderer.Clear();
-
-        shader.Bind();
-        shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
-
         renderer.Draw(va, ib, shader);
 
-        if (r > 1.0f)
-            increment = -0.05f;
-        else if (r < 0.0f)
-            increment = 0.05f;
-        
-        r += increment;
-
-        /* Swap front and back buffers */
         glfwSwapBuffers(window);
-
-        /* Poll for and process events */
         glfwPollEvents();
     }
 
