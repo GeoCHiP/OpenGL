@@ -24,6 +24,7 @@ add_executable(OpenGL
                src/VertexArray.cpp
                src/Shader.cpp
                src/Texture.cpp
+               src/Camera.cpp
 
                vendor/stb_image/stb_image.cpp
 )
