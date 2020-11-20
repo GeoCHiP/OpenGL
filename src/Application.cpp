@@ -124,47 +124,47 @@ int main() {
 
     float cubeVertices[] = {
         // Position
-        -0.5f, -0.5f, -0.5f, 
-         0.5f, -0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-        -0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-        -0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
     };
 
     GLCall(glEnable(GL_BLEND));
@@ -173,9 +173,10 @@ int main() {
 { // destructors should be called before glfwTerminate()
 
     VertexArray va;
-    VertexBuffer vb(cubeVertices, 36 * 3 * sizeof(float));
+    VertexBuffer vb(cubeVertices, 36 * 6 * sizeof(float));
 
     VertexBufferLayout layout;
+    layout.Push<float>(3);
     layout.Push<float>(3);
     va.AddBuffer(vb, layout);
     va.Unbind();
@@ -184,18 +185,21 @@ int main() {
     lightSourceVAO.AddBuffer(vb, layout);
     lightSourceVAO.Unbind();
 
+    glm::vec3 lightPosition(1.2f, 1.0f, 2.0f);
+
     Shader shader("../resources/shaders/Basic.glsl");
     shader.Bind();
-    shader.SetUniform4f("u_LightColor", 1.0f, 1.0f, 1.0f, 1.0f);
-    shader.SetUniform4f("u_ObjectColor", 1.0f, 0.5f, 0.31f, 1.0f);
+    shader.SetUniform3f("u_ObjectColor", 1.0f, 0.5f, 0.31f);
+    shader.SetUniform3f("u_LightColor", 1.0f, 1.0f, 1.0f);
+    shader.SetUniform3f("u_LightPosition", lightPosition.x, lightPosition.y, lightPosition.z);
     glm::mat4 model(1.0f);
     shader.SetUniformMat4f("u_Model", model);
     shader.Unbind();
 
     Shader lightSourceShader("../resources/shaders/LightSource.glsl");
     lightSourceShader.Bind();
-    lightSourceShader.SetUniform4f("u_LightColor", 1.0f, 1.0f, 1.0f, 1.0f);
-    glm::vec3 lightPosition(1.2f, 1.0f, 2.0f);
+    lightSourceShader.SetUniform3f("u_LightColor", 1.0f, 1.0f, 1.0f);
+
     model = glm::translate(model, lightPosition);
     model = glm::scale(model, glm::vec3(0.2f));
     lightSourceShader.SetUniformMat4f("u_Model", model);
@@ -227,12 +231,13 @@ int main() {
 
         va.Bind();
         shader.Bind();
+        const glm::vec3 &viewerPosition = camera.GetPosition();
+        shader.SetUniform3f("u_ViewerPosition", viewerPosition.x, viewerPosition.y, viewerPosition.z);
         GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));
 
         lightSourceVAO.Bind();
         lightSourceShader.Bind();
         GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));
-        lightSourceShader.Bind();
 
         glfwSwapBuffers(window);
     }
