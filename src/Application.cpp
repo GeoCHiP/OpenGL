@@ -17,15 +17,16 @@
 
 Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
-const float WIDTH = 800;
-const float HEIGHT = 600;
+static float s_Width = 800.0f;
+static float s_Height = 600.0f;
+static bool s_IsFoolScreen = false;
 
-bool firstMouse = true;
-float lastX = WIDTH / 2;
-float lastY = HEIGHT / 2;
+static bool s_FirstMouse = true;
+static float s_LastX = s_Width / 2;
+static float s_LastY = s_Height / 2;
 
-float elapsedTime = 0.0f;
-float lastFrame = 0.0f;
+static float s_ElapsedTime = 0.0f;
+static float s_LastFrame = 0.0f;
 
 static void PrintMatrix(const glm::mat4 &m) {
     std::cout << "Matrix" << std::endl;
@@ -52,32 +53,46 @@ static void PrintVec(const glm::vec<L, float, glm::packed_highp> &v) {
 static void ProcessInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-    
+    if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS) {
+        if (s_IsFoolScreen) {
+            s_Width = 800;
+            s_Height = 600;
+            glfwSetWindowMonitor(window, NULL, 0, 0, s_Width, s_Height, GLFW_DONT_CARE);
+        } else {
+            s_Width = 1366;
+            s_Height = 768;
+            glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, s_Width, s_Height, GLFW_DONT_CARE);
+        }
+        s_IsFoolScreen = !s_IsFoolScreen;
+    }
+        
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(CameraMovement::Forward, elapsedTime);
+        camera.ProcessKeyboard(CameraMovement::Forward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(CameraMovement::Backward, elapsedTime);
+        camera.ProcessKeyboard(CameraMovement::Backward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(CameraMovement::Left, elapsedTime);
+        camera.ProcessKeyboard(CameraMovement::Left, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(CameraMovement::Right, elapsedTime);
+        camera.ProcessKeyboard(CameraMovement::Right, s_ElapsedTime);
 }
 
 static void FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
     GLCall(glViewport(0, 0, width, height));
+    s_Width = width;
+    s_Height = height;    
 }
 
 static void MouseMoveCallback(GLFWwindow *window, double xPos, double yPos) {
-    if (firstMouse) {
-        lastX = xPos;
-        lastY = yPos;
-        firstMouse = false;
+    if (s_FirstMouse) {
+        s_LastX = xPos;
+        s_LastY = yPos;
+        s_FirstMouse = false;
     }
 
-    float xOffset = xPos - lastX;
-    lastX = xPos;
-    float yOffset = lastY - yPos;
-    lastY = yPos;
+    float xOffset = xPos - s_LastX;
+    s_LastX = xPos;
+    float yOffset = s_LastY - yPos;
+    s_LastY = yPos;
 
     camera.ProcessMouseMovement(xOffset, yOffset);
 }
@@ -96,7 +111,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Hello World", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(s_Width, s_Height, "Hello World", NULL, NULL);
 
     if (window == NULL) {
         std::cerr << "Failed to create a window and its opengl context!" << std::endl;
@@ -189,17 +204,23 @@ int main() {
 
     Shader shader("../resources/shaders/Basic.glsl");
     shader.Bind();
-    shader.SetUniform3f("u_ObjectColor", 1.0f, 0.5f, 0.31f);
-    shader.SetUniform3f("u_LightColor", 1.0f, 1.0f, 1.0f);
-    shader.SetUniform3f("u_LightPosition", lightPosition.x, lightPosition.y, lightPosition.z);
+    
+    shader.SetUniform3f("u_Material.ambient", 1.0f, 0.5f, 0.31f);
+    shader.SetUniform3f("u_Material.diffuse", 1.0f, 0.5f, 0.31f);
+    shader.SetUniform3f("u_Material.specular", 0.5f, 0.5f, 0.5f);
+    shader.SetUniform1f("u_Material.shininess", 32.0f);
+    
+    shader.SetUniform3f("u_Light.position", lightPosition.x, lightPosition.y, lightPosition.z);
+    shader.SetUniform3f("u_Light.ambient", 0.1f, 0.1f, 0.1f);
+    shader.SetUniform3f("u_Light.diffuse", 1.0f, 1.0f, 1.0f);
+    shader.SetUniform3f("u_Light.specular", 1.0f, 1.0f, 1.0f);
+
     glm::mat4 model(1.0f);
     shader.SetUniformMat4f("u_Model", model);
     shader.Unbind();
 
     Shader lightSourceShader("../resources/shaders/LightSource.glsl");
     lightSourceShader.Bind();
-    lightSourceShader.SetUniform3f("u_LightColor", 1.0f, 1.0f, 1.0f);
-
     model = glm::translate(model, lightPosition);
     model = glm::scale(model, glm::vec3(0.2f));
     lightSourceShader.SetUniformMat4f("u_Model", model);
@@ -209,8 +230,8 @@ int main() {
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
-        elapsedTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        s_ElapsedTime = currentFrame - s_LastFrame;
+        s_LastFrame = currentFrame;
 
         glfwPollEvents();
         ProcessInput(window);
@@ -221,7 +242,7 @@ int main() {
         lightSourceShader.Bind();
         lightSourceShader.SetUniformMat4f("u_View", view);
 
-        glm::mat4 projection = glm::perspective(glm::radians(camera.GetFoV()), WIDTH / HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.GetFoV()), s_Width / s_Height, 0.1f, 100.0f);
         shader.Bind();
         shader.SetUniformMat4f("u_Projection", projection);
         lightSourceShader.Bind();

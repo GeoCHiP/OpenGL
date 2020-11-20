@@ -22,28 +22,43 @@ void main() {
 
 layout (location = 0) out vec4 color;
 
-uniform vec3 u_ObjectColor;
-uniform vec3 u_LightColor;
-uniform vec3 u_LightPosition;
-uniform vec3 u_ViewerPosition;
-
 in vec3 v_Normal;
 in vec3 v_FragmentPosition;
 
+struct Material {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+};
+
+struct Light {
+    vec3 position;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
+uniform Material u_Material;
+uniform Light u_Light;
+
+uniform vec3 u_ViewerPosition;
+
 void main() {
-    float ambientStrength = 0.1f;
-    vec3 ambient = ambientStrength * u_LightColor;
-    
+    // diffuse factor    
     vec3 Normal = normalize(v_Normal);
-    vec3 lightDirection = normalize(u_LightPosition - v_FragmentPosition);
+    vec3 lightDirection = normalize(u_Light.position - v_FragmentPosition);
     float diff = max(dot(Normal, lightDirection), 0.0f);
-    vec3 diffuse = diff * u_LightColor;
     
-    float specularStrength = 0.5f;
+    // specular factor
     vec3 viewDirection = normalize(u_ViewerPosition - v_FragmentPosition);
     vec3 reflectDirection = reflect(-lightDirection, Normal);
-    float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), 32);
-    vec3 specular = specularStrength * spec * u_LightColor;
+    float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), u_Material.shininess);
 
-    color = vec4((ambient + diffuse + specular) * u_ObjectColor, 1.0f);
+    vec3 ambient = u_Light.ambient * u_Material.ambient;
+    vec3 diffuse = u_Light.diffuse * (diff * u_Material.diffuse);
+    vec3 specular = u_Light.specular * (spec * u_Material.specular);
+
+    vec3 result = ambient + diffuse + specular;
+    color = vec4(result, 1.0f);
 }
