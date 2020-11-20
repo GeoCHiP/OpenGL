@@ -71,9 +71,13 @@ static void ProcessInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         camera.ProcessKeyboard(CameraMovement::Backward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(CameraMovement::Left, s_ElapsedTime);
+        camera.ProcessKeyboard(CameraMovement::Leftward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(CameraMovement::Right, s_ElapsedTime);
+        camera.ProcessKeyboard(CameraMovement::Rightward, s_ElapsedTime);
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        camera.ProcessKeyboard(CameraMovement::Upward, s_ElapsedTime);
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        camera.ProcessKeyboard(CameraMovement::Downward, s_ElapsedTime);
 }
 
 static void FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
@@ -205,9 +209,9 @@ int main() {
     Shader shader("../resources/shaders/Basic.glsl");
     shader.Bind();
     
-    shader.SetUniform3f("u_Material.ambient", 1.0f, 0.5f, 0.31f);
-    shader.SetUniform3f("u_Material.diffuse", 1.0f, 0.5f, 0.31f);
-    shader.SetUniform3f("u_Material.specular", 0.5f, 0.5f, 0.5f);
+    shader.SetUniform3f("u_Material.ambient", 0.0215f, 0.1745f, 0.0215f);
+    shader.SetUniform3f("u_Material.diffuse", 0.07568f, 0.61424f, 0.07568f);
+    shader.SetUniform3f("u_Material.specular", 0.633f, 0.727811f, 0.633f);
     shader.SetUniform1f("u_Material.shininess", 32.0f);
     
     shader.SetUniform3f("u_Light.position", lightPosition.x, lightPosition.y, lightPosition.z);

@@ -18,11 +18,17 @@ void Camera::ProcessKeyboard(CameraMovement direction, float elapsedTime) {
         case CameraMovement::Backward:
             m_Position -= m_Front * velocity;
             break;
-        case CameraMovement::Left:
+        case CameraMovement::Leftward:
             m_Position -= m_Right * velocity;
             break;
-        case CameraMovement::Right:
+        case CameraMovement::Rightward:
             m_Position += m_Right * velocity;
+            break;
+        case CameraMovement::Upward:
+            m_Position += m_Up * velocity;
+            break;
+        case CameraMovement::Downward:
+            m_Position -= m_Up * velocity;
             break;
     }
 }

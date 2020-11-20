@@ -11,7 +11,7 @@ static const float DEF_SENSITIVITY = 0.1f;
 static const float DEF_FOV = 45.0f;
 
 enum class CameraMovement {
-    Forward = 0, Backward, Left, Right
+    Forward = 0, Backward, Leftward, Rightward, Downward, Upward
 };
 
 class Camera {
