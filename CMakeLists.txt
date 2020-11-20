@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(OpenGL REQUIRED)
 
-# Turn off redunant targets
+# Turn off redundant targets
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "GLFW lib only" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "GLFW lib only" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "GLFW lib only" FORCE)
