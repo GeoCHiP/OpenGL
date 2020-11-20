@@ -15,7 +15,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
+static Camera s_Camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
 static float s_Width = 800.0f;
 static float s_Height = 600.0f;
@@ -67,17 +67,17 @@ static void ProcessInput(GLFWwindow *window) {
     }
         
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(CameraMovement::Forward, s_ElapsedTime);
+        s_Camera.ProcessKeyboard(CameraMovement::Forward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(CameraMovement::Backward, s_ElapsedTime);
+        s_Camera.ProcessKeyboard(CameraMovement::Backward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(CameraMovement::Leftward, s_ElapsedTime);
+        s_Camera.ProcessKeyboard(CameraMovement::Leftward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(CameraMovement::Rightward, s_ElapsedTime);
+        s_Camera.ProcessKeyboard(CameraMovement::Rightward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-        camera.ProcessKeyboard(CameraMovement::Upward, s_ElapsedTime);
+        s_Camera.ProcessKeyboard(CameraMovement::Upward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-        camera.ProcessKeyboard(CameraMovement::Downward, s_ElapsedTime);
+        s_Camera.ProcessKeyboard(CameraMovement::Downward, s_ElapsedTime);
 }
 
 static void FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
@@ -98,11 +98,11 @@ static void MouseMoveCallback(GLFWwindow *window, double xPos, double yPos) {
     float yOffset = s_LastY - yPos;
     s_LastY = yPos;
 
-    camera.ProcessMouseMovement(xOffset, yOffset);
+    s_Camera.ProcessMouseMovement(xOffset, yOffset);
 }
 
-void MouseScrollCallback(GLFWwindow *window, double xOffset, double yOffset) {
-    camera.ProcessMouseScroll(static_cast<float>(yOffset));
+static void MouseScrollCallback(GLFWwindow *window, double xOffset, double yOffset) {
+    s_Camera.ProcessMouseScroll(static_cast<float>(yOffset));
 }
 
 int main() {
@@ -142,48 +142,48 @@ int main() {
     GLCall(glEnable(GL_DEPTH_TEST));
 
     float cubeVertices[] = {
-        // Position
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        // positions          // normals           // texture coords
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
 
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
 
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
     };
 
     GLCall(glEnable(GL_BLEND));
@@ -192,11 +192,12 @@ int main() {
 { // destructors should be called before glfwTerminate()
 
     VertexArray va;
-    VertexBuffer vb(cubeVertices, 36 * 6 * sizeof(float));
+    VertexBuffer vb(cubeVertices, 36 * 8 * sizeof(float));
 
     VertexBufferLayout layout;
     layout.Push<float>(3);
     layout.Push<float>(3);
+    layout.Push<float>(2);
     va.AddBuffer(vb, layout);
     va.Unbind();
 
@@ -206,29 +207,9 @@ int main() {
 
     glm::vec3 lightPosition(1.2f, 1.0f, 2.0f);
 
+    Texture diffuseMap("../resources/textures/container_diffuse_map.png");
     Shader shader("../resources/shaders/Basic.glsl");
-    shader.Bind();
-    
-    shader.SetUniform3f("u_Material.ambient", 0.0215f, 0.1745f, 0.0215f);
-    shader.SetUniform3f("u_Material.diffuse", 0.07568f, 0.61424f, 0.07568f);
-    shader.SetUniform3f("u_Material.specular", 0.633f, 0.727811f, 0.633f);
-    shader.SetUniform1f("u_Material.shininess", 32.0f);
-    
-    shader.SetUniform3f("u_Light.position", lightPosition.x, lightPosition.y, lightPosition.z);
-    shader.SetUniform3f("u_Light.ambient", 0.1f, 0.1f, 0.1f);
-    shader.SetUniform3f("u_Light.diffuse", 1.0f, 1.0f, 1.0f);
-    shader.SetUniform3f("u_Light.specular", 1.0f, 1.0f, 1.0f);
-
-    glm::mat4 model(1.0f);
-    shader.SetUniformMat4f("u_Model", model);
-    shader.Unbind();
-
     Shader lightSourceShader("../resources/shaders/LightSource.glsl");
-    lightSourceShader.Bind();
-    model = glm::translate(model, lightPosition);
-    model = glm::scale(model, glm::vec3(0.2f));
-    lightSourceShader.SetUniformMat4f("u_Model", model);
-    lightSourceShader.Unbind();
 
     Renderer renderer;
 
@@ -240,28 +221,40 @@ int main() {
         glfwPollEvents();
         ProcessInput(window);
 
-        glm::mat4 view = camera.GetViewMatrix();
-        shader.Bind();
-        shader.SetUniformMat4f("u_View", view);
-        lightSourceShader.Bind();
-        lightSourceShader.SetUniformMat4f("u_View", view);
-
-        glm::mat4 projection = glm::perspective(glm::radians(camera.GetFoV()), s_Width / s_Height, 0.1f, 100.0f);
-        shader.Bind();
-        shader.SetUniformMat4f("u_Projection", projection);
-        lightSourceShader.Bind();
-        lightSourceShader.SetUniformMat4f("u_Projection", projection);
-
         renderer.Clear();
 
         va.Bind();
         shader.Bind();
-        const glm::vec3 &viewerPosition = camera.GetPosition();
+        shader.SetUniform3f("u_Light.position", lightPosition.x, lightPosition.y, lightPosition.z);
+        shader.SetUniform3f("u_Light.ambient", 0.1f, 0.1f, 0.1f);
+        shader.SetUniform3f("u_Light.diffuse", 1.0f, 1.0f, 1.0f);
+        shader.SetUniform3f("u_Light.specular", 1.0f, 1.0f, 1.0f);
+
+        diffuseMap.Bind(0);
+        shader.SetUniform1i("u_Material.diffuse", 0);
+        shader.SetUniform3f("u_Material.specular", 0.633f, 0.727811f, 0.633f);
+        shader.SetUniform1f("u_Material.shininess", 0.6f);
+
+        const glm::vec3 &viewerPosition = s_Camera.GetPosition();
         shader.SetUniform3f("u_ViewerPosition", viewerPosition.x, viewerPosition.y, viewerPosition.z);
+
+        glm::mat4 model(1.0f);
+        glm::mat4 view = s_Camera.GetViewMatrix();
+        glm::mat4 projection = glm::perspective(glm::radians(s_Camera.GetFoV()), s_Width / s_Height, 0.1f, 100.0f);
+        shader.SetUniformMat4f("u_Model", model);
+        shader.SetUniformMat4f("u_View", view);
+        shader.SetUniformMat4f("u_Projection", projection);
+
         GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));
 
         lightSourceVAO.Bind();
         lightSourceShader.Bind();
+        model = glm::translate(model, lightPosition);
+        model = glm::scale(model, glm::vec3(0.2f));
+        lightSourceShader.SetUniformMat4f("u_Model", model);
+        lightSourceShader.SetUniformMat4f("u_View", view);
+        lightSourceShader.SetUniformMat4f("u_Projection", projection);
+
         GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));
 
         glfwSwapBuffers(window);
