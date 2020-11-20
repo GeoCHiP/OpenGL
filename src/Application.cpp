@@ -208,6 +208,7 @@ int main() {
     glm::vec3 lightPosition(1.2f, 1.0f, 2.0f);
 
     Texture diffuseMap("../resources/textures/container_diffuse_map.png");
+    Texture specularMap("../resources/textures/container_specular_map.png");
     Shader shader("../resources/shaders/Basic.glsl");
     Shader lightSourceShader("../resources/shaders/LightSource.glsl");
 
@@ -231,8 +232,9 @@ int main() {
         shader.SetUniform3f("u_Light.specular", 1.0f, 1.0f, 1.0f);
 
         diffuseMap.Bind(0);
+        specularMap.Bind(1);
         shader.SetUniform1i("u_Material.diffuse", 0);
-        shader.SetUniform3f("u_Material.specular", 0.633f, 0.727811f, 0.633f);
+        shader.SetUniform1i("u_Material.specular", 1);
         shader.SetUniform1f("u_Material.shininess", 0.6f);
 
         const glm::vec3 &viewerPosition = s_Camera.GetPosition();
