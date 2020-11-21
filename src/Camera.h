@@ -27,6 +27,7 @@ public:
     inline glm::mat4 GetViewMatrix() const { return glm::lookAt(m_Position, m_Position + m_Front, m_Up); }
     inline float GetFoV() const { return m_FoV; }
     inline const glm::vec3 &GetPosition() const { return m_Position; }
+    inline const glm::vec3 &GetFront() const { return m_Front; }
 
 private:
     void UpdateCameraVectors();
