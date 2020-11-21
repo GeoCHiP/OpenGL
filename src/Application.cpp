@@ -186,6 +186,19 @@ int main() {
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
     };
 
+    glm::vec3 cubePositions[] = {
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3( 2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3( 1.3f, -2.0f, -2.5f),
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
+
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
@@ -230,6 +243,9 @@ int main() {
         shader.SetUniform3f("u_Light.ambient", 0.1f, 0.1f, 0.1f);
         shader.SetUniform3f("u_Light.diffuse", 1.0f, 1.0f, 1.0f);
         shader.SetUniform3f("u_Light.specular", 1.0f, 1.0f, 1.0f);
+        shader.SetUniform1f("u_Light.constant", 1.0f);
+        shader.SetUniform1f("u_Light.linear", 0.09f);
+        shader.SetUniform1f("u_Light.quadratic", 0.032f);
 
         diffuseMap.Bind(0);
         specularMap.Bind(1);
@@ -240,17 +256,24 @@ int main() {
         const glm::vec3 &viewerPosition = s_Camera.GetPosition();
         shader.SetUniform3f("u_ViewerPosition", viewerPosition.x, viewerPosition.y, viewerPosition.z);
 
-        glm::mat4 model(1.0f);
         glm::mat4 view = s_Camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(s_Camera.GetFoV()), s_Width / s_Height, 0.1f, 100.0f);
-        shader.SetUniformMat4f("u_Model", model);
         shader.SetUniformMat4f("u_View", view);
         shader.SetUniformMat4f("u_Projection", projection);
 
-        GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));
+        for(unsigned int i = 0; i < 10; i++) {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[i]);
+            float angle = 20.0f * i * (i % 2 ? glfwGetTime() : 1);
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            shader.SetUniformMat4f("u_Model", model);
+
+            GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));
+        }
 
         lightSourceVAO.Bind();
         lightSourceShader.Bind();
+        glm::mat4 model(1.0f);
         model = glm::translate(model, lightPosition);
         model = glm::scale(model, glm::vec3(0.2f));
         lightSourceShader.SetUniformMat4f("u_Model", model);

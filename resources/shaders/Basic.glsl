@@ -37,9 +37,14 @@ struct Material {
 
 struct Light {
     vec3 position;
+
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
 };
 
 uniform Material u_Material;
@@ -50,7 +55,7 @@ uniform vec3 u_ViewerPosition;
 void main() {
     // diffuse factor    
     vec3 normal = normalize(v_Normal);
-    vec3 lightDirection = normalize(u_Light.position - v_FragmentPosition);
+    vec3 lightDirection = normalize(u_Light.position - v_FragmentPosition);    
     float diff = max(dot(normal, lightDirection), 0.0f);
 
     // specular factor
@@ -62,6 +67,10 @@ void main() {
     vec3 diffuse = u_Light.diffuse * diff * vec3(texture(u_Material.diffuse, v_TexCoords));
     vec3 specular = u_Light.specular * spec * vec3(texture(u_Material.specular, v_TexCoords));
 
-    vec3 result = ambient + diffuse + specular;
+    // attenuation factor
+    float dist = length(u_Light.position - v_FragmentPosition);
+    float attenuation = 1.0f / (u_Light.constant + u_Light.linear * dist + u_Light.quadratic * dist * dist);
+
+    vec3 result = (ambient + diffuse + specular) * attenuation;
     color = vec4(result, 1.0f);
 }
