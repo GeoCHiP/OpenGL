@@ -53,9 +53,9 @@ uniform Light u_Light;
 uniform vec3 u_ViewerPosition;
 
 void main() {
-    // diffuse factor    
+    // diffuse factor
     vec3 normal = normalize(v_Normal);
-    vec3 lightDirection = normalize(u_Light.position - v_FragmentPosition);    
+    vec3 lightDirection = normalize(u_Light.position - v_FragmentPosition);
     float diff = max(dot(normal, lightDirection), 0.0f);
 
     // specular factor

@@ -65,7 +65,7 @@ static void ProcessInput(GLFWwindow *window) {
         }
         s_IsFoolScreen = !s_IsFoolScreen;
     }
-        
+
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         s_Camera.ProcessKeyboard(CameraMovement::Forward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -83,7 +83,7 @@ static void ProcessInput(GLFWwindow *window) {
 static void FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
     GLCall(glViewport(0, 0, width, height));
     s_Width = width;
-    s_Height = height;    
+    s_Height = height;
 }
 
 static void MouseMoveCallback(GLFWwindow *window, double xPos, double yPos) {
