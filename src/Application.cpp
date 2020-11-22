@@ -206,6 +206,13 @@ int main() {
         glm::vec3( 0.0f,  0.0f, -3.0f)
     };
 
+    glm::vec3 pointLightColors[] = {
+        glm::vec3(0.2f, 0.3f, 0.8f),
+        glm::vec3(0.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 0.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 0.0f)
+    };
+
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
@@ -258,8 +265,8 @@ int main() {
         // Point light 1
         shader.SetUniform3f("u_PointLights[0].position", pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
         shader.SetUniform3f("u_PointLights[0].ambient", 0.1f, 0.1f, 0.1f);
-        shader.SetUniform3f("u_PointLights[0].diffuse", 1.0f, 1.0f, 1.0f);
-        shader.SetUniform3f("u_PointLights[0].specular", 1.0f, 1.0f, 1.0f);
+        shader.SetUniform3f("u_PointLights[0].diffuse", pointLightColors[0].r, pointLightColors[0].g, pointLightColors[0].b);
+        shader.SetUniform3f("u_PointLights[0].specular", pointLightColors[0].r, pointLightColors[0].g, pointLightColors[0].b);
         shader.SetUniform1f("u_PointLights[0].constant", 1.0f);
         shader.SetUniform1f("u_PointLights[0].linear", 0.09f);
         shader.SetUniform1f("u_PointLights[0].quadratic", 0.032f);
@@ -267,8 +274,8 @@ int main() {
         // Point light 2
         shader.SetUniform3f("u_PointLights[1].position", pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
         shader.SetUniform3f("u_PointLights[1].ambient", 0.1f, 0.1f, 0.1f);
-        shader.SetUniform3f("u_PointLights[1].diffuse", 1.0f, 1.0f, 1.0f);
-        shader.SetUniform3f("u_PointLights[1].specular", 1.0f, 1.0f, 1.0f);
+        shader.SetUniform3f("u_PointLights[1].diffuse", pointLightColors[1].r, pointLightColors[1].g, pointLightColors[1].b);
+        shader.SetUniform3f("u_PointLights[1].specular", pointLightColors[1].r, pointLightColors[1].g, pointLightColors[1].b);
         shader.SetUniform1f("u_PointLights[1].constant", 1.0f);
         shader.SetUniform1f("u_PointLights[1].linear", 0.09f);
         shader.SetUniform1f("u_PointLights[1].quadratic", 0.032f);
@@ -276,8 +283,8 @@ int main() {
         // Point light 3
         shader.SetUniform3f("u_PointLights[2].position", pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
         shader.SetUniform3f("u_PointLights[2].ambient", 0.1f, 0.1f, 0.1f);
-        shader.SetUniform3f("u_PointLights[2].diffuse", 1.0f, 1.0f, 1.0f);
-        shader.SetUniform3f("u_PointLights[2].specular", 1.0f, 1.0f, 1.0f);
+        shader.SetUniform3f("u_PointLights[2].diffuse", pointLightColors[2].r, pointLightColors[2].g, pointLightColors[2].b);
+        shader.SetUniform3f("u_PointLights[2].specular", pointLightColors[2].r, pointLightColors[2].g, pointLightColors[2].b);
         shader.SetUniform1f("u_PointLights[2].constant", 1.0f);
         shader.SetUniform1f("u_PointLights[2].linear", 0.09f);
         shader.SetUniform1f("u_PointLights[2].quadratic", 0.032f);
@@ -285,8 +292,8 @@ int main() {
         // Point light 4
         shader.SetUniform3f("u_PointLights[3].position", pointLightPositions[3].x, pointLightPositions[3].y, pointLightPositions[3].z);
         shader.SetUniform3f("u_PointLights[3].ambient", 0.1f, 0.1f, 0.1f);
-        shader.SetUniform3f("u_PointLights[3].diffuse", 1.0f, 1.0f, 1.0f);
-        shader.SetUniform3f("u_PointLights[3].specular", 1.0f, 1.0f, 1.0f);
+        shader.SetUniform3f("u_PointLights[3].diffuse", pointLightColors[3].r, pointLightColors[3].g, pointLightColors[3].b);
+        shader.SetUniform3f("u_PointLights[3].specular", pointLightColors[3].r, pointLightColors[3].g, pointLightColors[3].b);
         shader.SetUniform1f("u_PointLights[3].constant", 1.0f);
         shader.SetUniform1f("u_PointLights[3].linear", 0.09f);
         shader.SetUniform1f("u_PointLights[3].quadratic", 0.032f);
@@ -296,8 +303,8 @@ int main() {
         shader.SetUniform1f("u_SpotLight.innerCutOff", glm::cos(glm::radians(5.0f)));
         shader.SetUniform1f("u_SpotLight.outerCutOff", glm::cos(glm::radians(17.5f)));
         shader.SetUniform3f("u_SpotLight.ambient", 0.1f, 0.1f, 0.1f);
-        shader.SetUniform3f("u_SpotLight.diffuse", 1.0f, 1.0f, 1.0f);
-        shader.SetUniform3f("u_SpotLight.specular", 1.0f, 1.0f, 1.0f);
+        shader.SetUniform3f("u_SpotLight.diffuse", 0.0f, 0.0f, 1.0f);
+        shader.SetUniform3f("u_SpotLight.specular", 0.0f, 0.0f, 1.0f);
         shader.SetUniform1f("u_SpotLight.constant", 1.0f);
         shader.SetUniform1f("u_SpotLight.linear", 0.09f);
         shader.SetUniform1f("u_SpotLight.quadratic", 0.032f);
@@ -335,6 +342,7 @@ int main() {
             model = glm::translate(model, pointLightPositions[i]);
             model = glm::scale(model, glm::vec3(0.2f));
             lightSourceShader.SetUniformMat4f("u_Model", model);
+            lightSourceShader.SetUniform3f("u_Color", pointLightColors[i].r, pointLightColors[i].g, pointLightColors[i].b);
             GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));
         }
 
