@@ -229,7 +229,7 @@ int main() {
 
     Texture diffuseMap("../resources/textures/container_diffuse_map.png");
     Texture specularMap("../resources/textures/container_specular_map.png");
-    Shader shader("../resources/shaders/Basic.glsl");
+    Shader shader("../resources/shaders/MultipleLights.glsl");
     Shader lightSourceShader("../resources/shaders/LightSource.glsl");
 
     Renderer renderer;
