@@ -15,11 +15,16 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+
 static Camera s_Camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
 static float s_Width = 800.0f;
 static float s_Height = 600.0f;
 static bool s_IsFoolScreen = false;
+static bool s_EnableCursor = false;
 
 static bool s_FirstMouse = true;
 static float s_LastX = s_Width / 2;
@@ -53,18 +58,6 @@ static void PrintVec(const glm::vec<L, float, glm::packed_highp> &v) {
 static void ProcessInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-    if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS) {
-        if (s_IsFoolScreen) {
-            s_Width = 800;
-            s_Height = 600;
-            glfwSetWindowMonitor(window, NULL, 0, 0, s_Width, s_Height, GLFW_DONT_CARE);
-        } else {
-            s_Width = 1366;
-            s_Height = 768;
-            glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, s_Width, s_Height, GLFW_DONT_CARE);
-        }
-        s_IsFoolScreen = !s_IsFoolScreen;
-    }
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         s_Camera.ProcessKeyboard(CameraMovement::Forward, s_ElapsedTime);
@@ -87,22 +80,50 @@ static void FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
 }
 
 static void MouseMoveCallback(GLFWwindow *window, double xPos, double yPos) {
-    if (s_FirstMouse) {
+    if (!s_EnableCursor) {
+        if (s_FirstMouse) {
+            s_LastX = xPos;
+            s_LastY = yPos;
+            s_FirstMouse = false;
+        }
+
+        float xOffset = xPos - s_LastX;
         s_LastX = xPos;
+        float yOffset = s_LastY - yPos;
         s_LastY = yPos;
-        s_FirstMouse = false;
+
+        s_Camera.ProcessMouseMovement(xOffset, yOffset);
     }
-
-    float xOffset = xPos - s_LastX;
-    s_LastX = xPos;
-    float yOffset = s_LastY - yPos;
-    s_LastY = yPos;
-
-    s_Camera.ProcessMouseMovement(xOffset, yOffset);
 }
 
 static void MouseScrollCallback(GLFWwindow *window, double xOffset, double yOffset) {
-    s_Camera.ProcessMouseScroll(static_cast<float>(yOffset));
+    if (!s_EnableCursor)
+        s_Camera.ProcessMouseScroll(static_cast<float>(yOffset));
+}
+
+static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (key == GLFW_KEY_F11 && action == GLFW_PRESS) {
+        if (s_IsFoolScreen) {
+            s_Width = 800;
+            s_Height = 600;
+            glfwSetWindowMonitor(window, NULL, 0, 0, s_Width, s_Height, GLFW_DONT_CARE);
+        } else {
+            s_Width = 1366;
+            s_Height = 768;
+            glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, s_Width, s_Height, GLFW_DONT_CARE);
+        }
+        s_IsFoolScreen = !s_IsFoolScreen;
+    }
+
+    if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS) {
+        if (s_EnableCursor) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        } else {
+            s_FirstMouse = true;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+        s_EnableCursor = !s_EnableCursor;
+    }
 }
 
 int main() {
@@ -126,11 +147,13 @@ int main() {
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    if (!s_EnableCursor)
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
     glfwSetCursorPosCallback(window, MouseMoveCallback);
     glfwSetScrollCallback(window, MouseScrollCallback);
+    glfwSetKeyCallback(window, KeyCallback);
 
     if (glewInit() != GLEW_OK) {
         std::cerr << "Failed to initialize GLEW!" << std::endl;
@@ -241,6 +264,11 @@ int main() {
 
     Renderer renderer;
 
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
         s_ElapsedTime = currentFrame - s_LastFrame;
@@ -250,6 +278,24 @@ int main() {
         ProcessInput(window);
 
         renderer.Clear();
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        {
+            ImGui::Begin("Control panel");
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+            for (int i = 0; i < 4; ++i) {
+                std::string idx = std::to_string(i + 1);
+                if (ImGui::CollapsingHeader(("Point light " + idx).c_str())) {
+                    ImGui::SliderFloat3(("Position " + idx).c_str(), &pointLightPositions[i].x, -10.0f, 10.0f);
+                    ImGui::ColorEdit3(("Color " + idx).c_str(), &pointLightColors[i].r);
+                }
+            }
+
+            ImGui::End();
+        }
 
         va.Bind();
         shader.Bind();
@@ -263,40 +309,16 @@ int main() {
         shader.SetUniform3f("u_DirLight.specular", 1.0f, 1.0f, 1.0f);
 
         // Point light 1
-        shader.SetUniform3f("u_PointLights[0].position", pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
-        shader.SetUniform3f("u_PointLights[0].ambient", 0.1f, 0.1f, 0.1f);
-        shader.SetUniform3f("u_PointLights[0].diffuse", pointLightColors[0].r, pointLightColors[0].g, pointLightColors[0].b);
-        shader.SetUniform3f("u_PointLights[0].specular", pointLightColors[0].r, pointLightColors[0].g, pointLightColors[0].b);
-        shader.SetUniform1f("u_PointLights[0].constant", 1.0f);
-        shader.SetUniform1f("u_PointLights[0].linear", 0.09f);
-        shader.SetUniform1f("u_PointLights[0].quadratic", 0.032f);
-
-        // Point light 2
-        shader.SetUniform3f("u_PointLights[1].position", pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
-        shader.SetUniform3f("u_PointLights[1].ambient", 0.1f, 0.1f, 0.1f);
-        shader.SetUniform3f("u_PointLights[1].diffuse", pointLightColors[1].r, pointLightColors[1].g, pointLightColors[1].b);
-        shader.SetUniform3f("u_PointLights[1].specular", pointLightColors[1].r, pointLightColors[1].g, pointLightColors[1].b);
-        shader.SetUniform1f("u_PointLights[1].constant", 1.0f);
-        shader.SetUniform1f("u_PointLights[1].linear", 0.09f);
-        shader.SetUniform1f("u_PointLights[1].quadratic", 0.032f);
-
-        // Point light 3
-        shader.SetUniform3f("u_PointLights[2].position", pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
-        shader.SetUniform3f("u_PointLights[2].ambient", 0.1f, 0.1f, 0.1f);
-        shader.SetUniform3f("u_PointLights[2].diffuse", pointLightColors[2].r, pointLightColors[2].g, pointLightColors[2].b);
-        shader.SetUniform3f("u_PointLights[2].specular", pointLightColors[2].r, pointLightColors[2].g, pointLightColors[2].b);
-        shader.SetUniform1f("u_PointLights[2].constant", 1.0f);
-        shader.SetUniform1f("u_PointLights[2].linear", 0.09f);
-        shader.SetUniform1f("u_PointLights[2].quadratic", 0.032f);
-
-        // Point light 4
-        shader.SetUniform3f("u_PointLights[3].position", pointLightPositions[3].x, pointLightPositions[3].y, pointLightPositions[3].z);
-        shader.SetUniform3f("u_PointLights[3].ambient", 0.1f, 0.1f, 0.1f);
-        shader.SetUniform3f("u_PointLights[3].diffuse", pointLightColors[3].r, pointLightColors[3].g, pointLightColors[3].b);
-        shader.SetUniform3f("u_PointLights[3].specular", pointLightColors[3].r, pointLightColors[3].g, pointLightColors[3].b);
-        shader.SetUniform1f("u_PointLights[3].constant", 1.0f);
-        shader.SetUniform1f("u_PointLights[3].linear", 0.09f);
-        shader.SetUniform1f("u_PointLights[3].quadratic", 0.032f);
+        for (int i = 0; i < 4; ++i) {
+            std::string idx = std::to_string(i);
+            shader.SetUniform3f(("u_PointLights[" + idx + "].position").c_str(), pointLightPositions[i].x, pointLightPositions[i].y, pointLightPositions[i].z);
+            shader.SetUniform3f(("u_PointLights[" + idx + "].ambient").c_str(), 0.1f, 0.1f, 0.1f);
+            shader.SetUniform3f(("u_PointLights[" + idx + "].diffuse").c_str(), pointLightColors[i].r, pointLightColors[i].g, pointLightColors[i].b);
+            shader.SetUniform3f(("u_PointLights[" + idx + "].specular").c_str(), pointLightColors[i].r, pointLightColors[i].g, pointLightColors[i].b);
+            shader.SetUniform1f(("u_PointLights[" + idx + "].constant").c_str(), 1.0f);
+            shader.SetUniform1f(("u_PointLights[" + idx + "].linear").c_str(), 0.09f);
+            shader.SetUniform1f(("u_PointLights[" + idx + "].quadratic").c_str(), 0.032f);
+        }
 
         shader.SetUniform3f("u_SpotLight.position", cameraPosition.x, cameraPosition.y, cameraPosition.z);
         shader.SetUniform3f("u_SpotLight.direction", cameraDirection.x, cameraDirection.y, cameraDirection.z);
@@ -346,10 +368,18 @@ int main() {
             GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));
         }
 
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);
     }
 
 } // destructors should be called before glfwTerminate()
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
+    glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
 }

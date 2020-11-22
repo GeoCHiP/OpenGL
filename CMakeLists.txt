@@ -16,6 +16,7 @@ add_subdirectory("vendor/glfw")
 add_subdirectory("vendor/glew/build/cmake")
 add_subdirectory("vendor/glm")
 add_subdirectory("vendor/stb_image")
+add_subdirectory("vendor/imgui")
 
 add_executable(OpenGL
                src/Application.cpp
@@ -28,12 +29,13 @@ add_executable(OpenGL
                src/Camera.cpp)
 
 target_include_directories(OpenGL
-                           PRIVATE "vendor/glwf/include"
+                           PRIVATE "vendor/glfw/include"
                            PRIVATE "vendor/glew/include"
                            PRIVATE "vendor/stb_image"
-                           PRIVATE "vendor/glm")
+                           PRIVATE "vendor/glm"
+                           PRIVATE "vendor/imgui")
 
-target_link_libraries(OpenGL ${OPENGL_LIBRARIES} glfw glew_s stb_image glm)
+target_link_libraries(OpenGL ${OPENGL_LIBRARIES} glfw glew_s stb_image glm imgui)
 
 target_compile_definitions(OpenGL
                            PRIVATE "GLEW_NO_GLU=1"
