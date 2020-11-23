@@ -2,6 +2,7 @@
 #include "VertexBufferLayout.h"
 
 #include "imgui/imgui.h"
+#include "glm/glm.hpp"
 
 namespace test {
 
@@ -28,7 +29,7 @@ namespace test {
     void TestTriangle::OnRender(const Camera &camera, float aspectRatio) {
         Renderer renderer;
         m_Shader->Bind();
-        m_Shader->SetUniform3f("u_Color", m_Color[0], m_Color[1], m_Color[2]);
+        m_Shader->SetUniform3f("u_Color", glm::vec3(m_Color[0], m_Color[1], m_Color[2]));
         renderer.DrawArrays(*m_VAO, *m_Shader, 0, 3);
     }
 

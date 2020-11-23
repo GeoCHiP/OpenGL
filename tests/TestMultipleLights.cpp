@@ -7,7 +7,7 @@
 namespace test {
 
     TestMultipleLights::TestMultipleLights()
-    : m_DirLightDirection(glm::vec3(1.2f, 1.0f, 2.0f)),
+    : m_DirLightDirection(glm::vec3(-1.2f, -1.0f, -2.0f)),
     m_DirLightAmbient(glm::vec3(0.1f)),
     m_DirLightDiffuse(glm::vec3(0.5f)),
     m_DirLightSpecular(glm::vec3(0.5f)),
@@ -118,6 +118,8 @@ namespace test {
     void TestMultipleLights::OnUpdate(float elapsedTime) {}
 
     void TestMultipleLights::OnRender(const Camera &camera, float aspectRatio) {
+        GLCall(glEnable(GL_DEPTH_TEST));
+
         glm::vec3 containerPositions[] = {
             glm::vec3( 0.0f,  0.0f,  0.0f),
             glm::vec3( 2.0f,  5.0f, -15.0f),
@@ -136,27 +138,27 @@ namespace test {
         const glm::vec3 &cameraPosition = camera.GetPosition();
         const glm::vec3 &cameraDirection = camera.GetFront();
 
-        m_ContainerShader->SetUniform3f("u_ViewerPosition", cameraPosition.x, cameraPosition.y, cameraPosition.z);
+        m_ContainerShader->SetUniform3f("u_ViewerPosition", cameraPosition);
 
         if (m_IsEnabledDirLight) {
-            m_ContainerShader->SetUniform3f("u_DirLight.direction", m_DirLightDirection.x, m_DirLightDirection.y, m_DirLightDirection.z);
-            m_ContainerShader->SetUniform3f("u_DirLight.ambient", m_DirLightAmbient.r, m_DirLightAmbient.g, m_DirLightAmbient.b);
-            m_ContainerShader->SetUniform3f("u_DirLight.diffuse", m_DirLightDiffuse.r, m_DirLightDiffuse.g, m_DirLightDiffuse.b);
-            m_ContainerShader->SetUniform3f("u_DirLight.specular", m_DirLightSpecular.r, m_DirLightSpecular.g, m_DirLightSpecular.b);
+            m_ContainerShader->SetUniform3f("u_DirLight.direction", m_DirLightDirection);
+            m_ContainerShader->SetUniform3f("u_DirLight.ambient", m_DirLightAmbient);
+            m_ContainerShader->SetUniform3f("u_DirLight.diffuse", m_DirLightDiffuse);
+            m_ContainerShader->SetUniform3f("u_DirLight.specular", m_DirLightSpecular);
         } else {
-            m_ContainerShader->SetUniform3f("u_DirLight.direction", 0.0f, 0.0f, 0.0f);
-            m_ContainerShader->SetUniform3f("u_DirLight.ambient", 0.0f, 0.0f, 0.0f);
-            m_ContainerShader->SetUniform3f("u_DirLight.diffuse", 0.0f, 0.0f, 0.0f);
-            m_ContainerShader->SetUniform3f("u_DirLight.specular", 0.0f, 0.0f, 0.0f);
+            m_ContainerShader->SetUniform3f("u_DirLight.direction", glm::vec3(0.0f));
+            m_ContainerShader->SetUniform3f("u_DirLight.ambient", glm::vec3(0.0f));
+            m_ContainerShader->SetUniform3f("u_DirLight.diffuse", glm::vec3(0.0f));
+            m_ContainerShader->SetUniform3f("u_DirLight.specular", glm::vec3(0.0f));
         }
 
         if (m_IsEnabledPointLight) {
             for (int i = 0; i < 4; ++i) {
                 std::string idx = std::to_string(i);
-                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].position").c_str(), m_PointLightPositions[i].x, m_PointLightPositions[i].y, m_PointLightPositions[i].z);
-                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].ambient").c_str(), m_PointLightAmbient[i].r, m_PointLightAmbient[i].g, m_PointLightAmbient[i].b);
-                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].diffuse").c_str(), m_PointLightDiffuse[i].r, m_PointLightDiffuse[i].g, m_PointLightDiffuse[i].b);
-                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].specular").c_str(), m_PointLightSpecular[i].r, m_PointLightSpecular[i].g, m_PointLightSpecular[i].b);
+                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].position").c_str(), m_PointLightPositions[i]);
+                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].ambient").c_str(), m_PointLightAmbient[i]);
+                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].diffuse").c_str(), m_PointLightDiffuse[i]);
+                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].specular").c_str(), m_PointLightSpecular[i]);
                 m_ContainerShader->SetUniform1f(("u_PointLights[" + idx + "].constant").c_str(), m_PointLightConstant[i]);
                 m_ContainerShader->SetUniform1f(("u_PointLights[" + idx + "].linear").c_str(), m_PointLightLinear[i]);
                 m_ContainerShader->SetUniform1f(("u_PointLights[" + idx + "].quadratic").c_str(), m_PointLightQuadratic[i]);
@@ -164,10 +166,10 @@ namespace test {
         } else {
             for (int i = 0; i < 4; ++i) {
                 std::string idx = std::to_string(i);
-                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].position").c_str(), 0.0f, 0.0f, 0.0f);
-                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].ambient").c_str(), 0.0f, 0.0f, 0.0f);
-                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].diffuse").c_str(), 0.0f, 0.0f, 0.0f);
-                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].specular").c_str(), 0.0f, 0.0f, 0.0f);
+                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].position").c_str(), glm::vec3(0.0f));
+                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].ambient").c_str(), glm::vec3(0.0f));
+                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].diffuse").c_str(), glm::vec3(0.0f));
+                m_ContainerShader->SetUniform3f(("u_PointLights[" + idx + "].specular").c_str(), glm::vec3(0.0f));
                 m_ContainerShader->SetUniform1f(("u_PointLights[" + idx + "].constant").c_str(), 1.0f);
                 m_ContainerShader->SetUniform1f(("u_PointLights[" + idx + "].linear").c_str(), 1.0f);
                 m_ContainerShader->SetUniform1f(("u_PointLights[" + idx + "].quadratic").c_str(), 1.0f);
@@ -177,26 +179,26 @@ namespace test {
         if (m_IsEnabledSpotLight) {
             m_SpotLightPosition = cameraPosition;
             m_SpotLightDirection = cameraDirection;
-            m_ContainerShader->SetUniform3f("u_SpotLight.position", m_SpotLightPosition.x, m_SpotLightPosition.y, m_SpotLightPosition.z);
-            m_ContainerShader->SetUniform3f("u_SpotLight.direction", m_SpotLightDirection.x, m_SpotLightDirection.y, m_SpotLightDirection.z);
+            m_ContainerShader->SetUniform3f("u_SpotLight.position", m_SpotLightPosition);
+            m_ContainerShader->SetUniform3f("u_SpotLight.direction", m_SpotLightDirection);
             m_ContainerShader->SetUniform1f("u_SpotLight.innerCutOff", m_SpotLightInnerCutOff);
             m_ContainerShader->SetUniform1f("u_SpotLight.outerCutOff", m_SpotLightOuterCutOff);
-            m_ContainerShader->SetUniform3f("u_SpotLight.ambient", m_SpotLightAmbient.r, m_SpotLightAmbient.g, m_SpotLightAmbient.b);
-            m_ContainerShader->SetUniform3f("u_SpotLight.diffuse", m_SpotLightDiffuse.r, m_SpotLightDiffuse.g, m_SpotLightDiffuse.b);
-            m_ContainerShader->SetUniform3f("u_SpotLight.specular", m_SpotLightSpecular.r, m_SpotLightSpecular.g, m_SpotLightSpecular.b);
+            m_ContainerShader->SetUniform3f("u_SpotLight.ambient", m_SpotLightAmbient);
+            m_ContainerShader->SetUniform3f("u_SpotLight.diffuse", m_SpotLightDiffuse);
+            m_ContainerShader->SetUniform3f("u_SpotLight.specular", m_SpotLightSpecular);
             m_ContainerShader->SetUniform1f("u_SpotLight.constant", m_SpotLightConstant);
             m_ContainerShader->SetUniform1f("u_SpotLight.linear", m_SpotLightLinear);
             m_ContainerShader->SetUniform1f("u_SpotLight.quadratic", m_SpotLightQuadratic);
         } else {
             m_SpotLightPosition = glm::vec3(0.0f);
             m_SpotLightDirection = glm::vec3(0.0f);
-            m_ContainerShader->SetUniform3f("u_SpotLight.position", 0.0f, 0.0f, 0.0f);
-            m_ContainerShader->SetUniform3f("u_SpotLight.direction", 0.0f, 0.0f, 0.0f);
+            m_ContainerShader->SetUniform3f("u_SpotLight.position", glm::vec3(0.0f));
+            m_ContainerShader->SetUniform3f("u_SpotLight.direction", glm::vec3(0.0f));
             m_ContainerShader->SetUniform1f("u_SpotLight.innerCutOff", 90.0f);
             m_ContainerShader->SetUniform1f("u_SpotLight.outerCutOff", 90.0f);
-            m_ContainerShader->SetUniform3f("u_SpotLight.ambient", 0.0f, 0.0f, 0.0f);
-            m_ContainerShader->SetUniform3f("u_SpotLight.diffuse", 0.0f, 0.0f, 0.0f);
-            m_ContainerShader->SetUniform3f("u_SpotLight.specular", 0.0f, 0.0f, 0.0f);
+            m_ContainerShader->SetUniform3f("u_SpotLight.ambient", glm::vec3(0.0f));
+            m_ContainerShader->SetUniform3f("u_SpotLight.diffuse", glm::vec3(0.0f));
+            m_ContainerShader->SetUniform3f("u_SpotLight.specular", glm::vec3(0.0f));
             m_ContainerShader->SetUniform1f("u_SpotLight.constant", 1.0f);
             m_ContainerShader->SetUniform1f("u_SpotLight.linear", 1.0f);
             m_ContainerShader->SetUniform1f("u_SpotLight.quadratic", 1.0f);
@@ -235,10 +237,12 @@ namespace test {
                 model = glm::scale(model, glm::vec3(0.2f));
                 m_PointLightShader->SetUniformMat4f("u_Model", model);
                 glm::vec3 color = m_PointLightAmbient[i] + m_PointLightDiffuse[i] + m_PointLightSpecular[i];
-                m_PointLightShader->SetUniform3f("u_Color", color.r, color.g, color.b);
+                m_PointLightShader->SetUniform3f("u_Color", color);
                 renderer.DrawArrays(*m_PointLightVAO, *m_PointLightShader, 0, 36);
             }
         }
+
+        GLCall(glDisable(GL_DEPTH_TEST));
     }
 
     void TestMultipleLights::OnImGuiRender() {

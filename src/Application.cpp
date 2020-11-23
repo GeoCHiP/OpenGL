@@ -15,7 +15,6 @@
 #include "tests/TestMultipleLights.h"
 #include "tests/TestTriangle.h"
 
-
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -144,10 +143,6 @@ int main() {
     }
 
     std::cout << glGetString(GL_VERSION) << std::endl;
-
-    GLCall(glEnable(GL_DEPTH_TEST));
-    GLCall(glEnable(GL_BLEND));
-    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
 { // destructors should be called before glfwTerminate()
 
