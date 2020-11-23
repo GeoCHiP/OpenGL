@@ -7,6 +7,8 @@
 #include <sstream>
 #include <tuple>
 
+Shader::Shader() : m_File(), m_RendererID(0) {}
+
 Shader::Shader(const std::string &filepath)
               : m_File(filepath), m_RendererID(0) {
     auto[vertexShader, fragmentShader] = ParseShader(filepath);
@@ -15,6 +17,11 @@ Shader::Shader(const std::string &filepath)
 
 Shader::~Shader() {
     GLCall(glDeleteProgram(m_RendererID));
+}
+
+void Shader::LoadShader(const std::string &filepath) {
+    auto[vertexShader, fragmentShader] = ParseShader(filepath);
+    m_RendererID = CreateShader(vertexShader, fragmentShader);
 }
 
 void Shader::Bind() const {

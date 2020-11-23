@@ -8,8 +8,11 @@
 
 class Shader {
 public:
+    Shader();
     Shader(const std::string &filepath);
     ~Shader();
+
+    void LoadShader(const std::string &filepath);
 
     std::tuple<std::string, std::string> ParseShader(const std::string &filepath);
     unsigned int CreateShader(const std::string &vertexShader, const std::string &fragmentShader);
