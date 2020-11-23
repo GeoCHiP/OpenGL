@@ -18,17 +18,34 @@ add_subdirectory("vendor/glm")
 add_subdirectory("vendor/stb_image")
 add_subdirectory("vendor/imgui")
 
-add_executable(OpenGL
-               src/Application.cpp
-               src/Renderer.cpp
-               src/VertexBuffer.cpp
-               src/IndexBuffer.cpp
-               src/VertexArray.cpp
-               src/Shader.cpp
-               src/Texture.cpp
-               src/Camera.cpp)
+set(OPENGL_SOURCES
+    src/Application.cpp
+    src/Renderer.cpp
+    src/VertexBuffer.cpp
+    src/IndexBuffer.cpp
+    src/VertexArray.cpp
+    src/Shader.cpp
+    src/Texture.cpp
+    src/Camera.cpp
+    tests/TestMultipleLights.cpp)
+
+set(OPENGL_HEADERS
+    src/Renderer.h
+    src/VertexBuffer.h
+    src/VertexBufferLayout.h
+    src/IndexBuffer.h
+    src/VertexArray.h
+    src/Shader.h
+    src/Texture.h
+    src/Camera.h
+    tests/Test.h
+    tests/TestMultipleLights.h)
+
+add_executable(OpenGL ${OPENGL_SOURCES} ${OPENGL_HEADERS})
 
 target_include_directories(OpenGL
+                           PRIVATE "./"
+                           PRIVATE "src/"
                            PRIVATE "vendor/glfw/include"
                            PRIVATE "vendor/glew/include"
                            PRIVATE "vendor/stb_image"
