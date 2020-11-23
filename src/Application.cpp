@@ -13,6 +13,8 @@
 #include "Camera.h"
 
 #include "tests/TestMultipleLights.h"
+#include "tests/TestTriangle.h"
+
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -156,7 +158,12 @@ int main() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    test::TestMultipleLights test;
+    test::Test *currentTest = nullptr;
+    test::TestMenu *testMenu = new test::TestMenu(currentTest);
+    currentTest = testMenu;
+
+    testMenu->RegisterTest<test::TestMultipleLights>("Multiple lights");
+    testMenu->RegisterTest<test::TestTriangle>("Hello, triangle");
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
@@ -168,19 +175,30 @@ int main() {
 
         renderer.Clear();
 
-        test.OnUpdate(0.0f);
-        test.OnRender(s_Camera, s_Width / s_Height);
-
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        test.OnImGuiRender();
+        if (currentTest) {
+            currentTest->OnUpdate(s_ElapsedTime);
+            currentTest->OnRender(s_Camera, s_Width / s_Height);
+            ImGui::Begin("Test");
+            if (currentTest != testMenu && ImGui::Button("<-")) {
+                delete currentTest;
+                currentTest = testMenu;
+            }
+            currentTest->OnImGuiRender();
+            ImGui::End();
+        }
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);
     }
+
+    if (currentTest != testMenu)
+        delete currentTest;
+    delete testMenu;
 
 } // destructors should be called before glfwTerminate()
 

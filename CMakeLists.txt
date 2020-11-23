@@ -27,7 +27,9 @@ set(OPENGL_SOURCES
     src/Shader.cpp
     src/Texture.cpp
     src/Camera.cpp
-    tests/TestMultipleLights.cpp)
+    tests/Test.cpp
+    tests/TestMultipleLights.cpp
+    tests/TestTriangle.cpp)
 
 set(OPENGL_HEADERS
     src/Renderer.h
@@ -39,7 +41,8 @@ set(OPENGL_HEADERS
     src/Texture.h
     src/Camera.h
     tests/Test.h
-    tests/TestMultipleLights.h)
+    tests/TestMultipleLights.h
+    tests/TestTriangle.h)
 
 add_executable(OpenGL ${OPENGL_SOURCES} ${OPENGL_HEADERS})
 
