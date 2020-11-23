@@ -4,8 +4,9 @@
 
 #include "VertexArray.h"
 #include "VertexBuffer.h"
-#include "VertexBufferLayout.h"
 #include "Shader.h"
+
+#include <memory>
 
 namespace test {
 
@@ -19,12 +20,10 @@ namespace test {
         void OnImGuiRender() override;
 
     private:
-        float m_Vertices[9];
         float m_Color[3];
-        VertexArray m_VAO;
-        VertexBuffer m_VBO;
-        VertexBufferLayout m_Layout;
-        Shader m_Shader;
+        std::unique_ptr<VertexArray> m_VAO;
+        std::unique_ptr<VertexBuffer> m_VBO;
+        std::unique_ptr<Shader> m_Shader;
     };
 
 }

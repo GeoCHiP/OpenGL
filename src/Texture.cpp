@@ -4,27 +4,13 @@
 #include "Texture.h"
 #include "stb_image.h"
 
-Texture::Texture() : m_RendererID(0), m_FilePath(), m_LocalBuffer(nullptr),
-                   m_Width(0), m_Height(0), m_BPP(0) {
-    GLCall(glGenTextures(1, &m_RendererID));
-}
-
 Texture::Texture(const std::string &filepath)
                 : m_RendererID(0), m_FilePath(filepath), m_LocalBuffer(nullptr),
                 m_Width(0), m_Height(0), m_BPP(0) {
-    GLCall(glGenTextures(1, &m_RendererID));
-    LoadImage(filepath);
-}
-
-Texture::~Texture() {
-    GLCall(glDeleteTextures(1, &m_RendererID));
-}
-
-void Texture::LoadImage(const std::string &filepath) {
-    m_FilePath = filepath;
     stbi_set_flip_vertically_on_load(1);
     m_LocalBuffer = stbi_load(filepath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
 
+    GLCall(glGenTextures(1, &m_RendererID));
     GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));
 
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
@@ -41,6 +27,10 @@ void Texture::LoadImage(const std::string &filepath) {
     } else {
         std::cout << "[WARNING]: Texture hasn't been loaded!" << std::endl;
     }
+}
+
+Texture::~Texture() {
+    GLCall(glDeleteTextures(1, &m_RendererID));
 }
 
 void Texture::Bind(unsigned int slot) const {

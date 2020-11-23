@@ -11,6 +11,8 @@
 
 #include "glm/glm.hpp"
 
+#include <memory>
+
 namespace test {
 
     class TestMultipleLights final: public Test {
@@ -23,8 +25,6 @@ namespace test {
         void OnImGuiRender() override;
 
     private:
-        float m_CubeVertices[288];
-        glm::vec3 m_ContainerPositions[10];
         glm::vec3 m_DirLightDirection;
         glm::vec3 m_DirLightAmbient;
         glm::vec3 m_DirLightDiffuse;
@@ -46,17 +46,17 @@ namespace test {
         float m_SpotLightConstant;
         float m_SpotLightLinear;
         float m_SpotLightQuadratic;
-        VertexArray m_ContainerVAO;
-        VertexArray m_PointLightVAO;
-        VertexBuffer m_CubeVBO;
-        VertexBufferLayout m_CubeLayout;
-        Texture m_DiffuseMap;
-        Texture m_SpecularMap;
-        Shader m_ContainerShader;
-        Shader m_PointLightShader;
         bool m_IsEnabledDirLight;
         bool m_IsEnabledPointLight;
         bool m_IsEnabledSpotLight;
+        std::unique_ptr<VertexArray> m_ContainerVAO;
+        std::unique_ptr<VertexArray> m_PointLightVAO;
+        std::unique_ptr<VertexBuffer> m_CubeVBO;
+        std::unique_ptr<VertexBufferLayout> m_CubeLayout;
+        std::unique_ptr<Texture> m_DiffuseMap;
+        std::unique_ptr<Texture> m_SpecularMap;
+        std::unique_ptr<Shader> m_ContainerShader;
+        std::unique_ptr<Shader> m_PointLightShader;
     };
 
 }
