@@ -1,9 +1,9 @@
 #pragma once
 
-class IndexBuffer {
+class ElementBuffer {
 public:
-    IndexBuffer(unsigned int *data, unsigned int count);
-    ~IndexBuffer();
+    ElementBuffer(unsigned int *data, unsigned int count);
+    ~ElementBuffer();
 
     void Bind() const;
     void Unbind() const;

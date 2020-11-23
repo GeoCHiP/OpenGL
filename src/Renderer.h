@@ -4,7 +4,7 @@
 #include <csignal>
 
 #include "VertexArray.h"
-#include "IndexBuffer.h"
+#include "ElementBuffer.h"
 #include "Shader.h"
 
 #define ASSERT(x) if(!(x)) raise(SIGABRT)
@@ -21,6 +21,6 @@ public:
     ~Renderer();
 
     void Clear() const;
-    void DrawElements(const VertexArray &va, const IndexBuffer &ib, const Shader &shader) const;
-    void DrawArrays(const VertexArray &va, const Shader &shader, int first, unsigned int count) const;
+    void DrawElements(const VertexArray &vao, const ElementBuffer &ebo, const Shader &shader) const;
+    void DrawArrays(const VertexArray &vao, const Shader &shader, int first, unsigned int count) const;
 };

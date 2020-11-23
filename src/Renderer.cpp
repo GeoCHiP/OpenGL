@@ -26,15 +26,15 @@ void Renderer::Clear() const {
     GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
-void Renderer::DrawElements(const VertexArray &va, const IndexBuffer &ib, const Shader &shader) const {
-    va.Bind();
-    ib.Bind();
+void Renderer::DrawElements(const VertexArray &vao, const ElementBuffer &ebo, const Shader &shader) const {
+    vao.Bind();
+    ebo.Bind();
     shader.Bind();
-    GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr));
+    GLCall(glDrawElements(GL_TRIANGLES, ebo.GetCount(), GL_UNSIGNED_INT, nullptr));
 }
 
-void Renderer::DrawArrays(const VertexArray &va, const Shader &shader, int first, unsigned int count) const {
-    va.Bind();
+void Renderer::DrawArrays(const VertexArray &vao, const Shader &shader, int first, unsigned int count) const {
+    vao.Bind();
     shader.Bind();
     GLCall(glDrawArrays(GL_TRIANGLES, first, count));
 }

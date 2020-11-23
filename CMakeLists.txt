@@ -22,7 +22,7 @@ set(OPENGL_SOURCES
     src/Application.cpp
     src/Renderer.cpp
     src/VertexBuffer.cpp
-    src/IndexBuffer.cpp
+    src/ElementBuffer.cpp
     src/VertexArray.cpp
     src/Shader.cpp
     src/Texture.cpp
@@ -35,7 +35,7 @@ set(OPENGL_HEADERS
     src/Renderer.h
     src/VertexBuffer.h
     src/VertexBufferLayout.h
-    src/IndexBuffer.h
+    src/ElementBuffer.h
     src/VertexArray.h
     src/Shader.h
     src/Texture.h
