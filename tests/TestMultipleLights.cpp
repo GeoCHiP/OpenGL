@@ -133,7 +133,6 @@ namespace test {
             glm::vec3(-1.3f,  1.0f, -1.5f)
         };
 
-        m_ContainerVAO->Bind();
         m_ContainerShader->Bind();
         const glm::vec3 &cameraPosition = camera.GetPosition();
         const glm::vec3 &cameraDirection = camera.GetFront();
