@@ -19,6 +19,7 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+
 static Camera s_Camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
 static float s_Width = 800.0f;
@@ -33,27 +34,6 @@ static float s_LastY = s_Height / 2;
 static float s_ElapsedTime = 0.0f;
 static float s_LastFrame = 0.0f;
 
-static void PrintMatrix(const glm::mat4 &m) {
-    std::cout << "Matrix" << std::endl;
-    std::streamsize prev_width = std::cout.width(12);
-    std::left(std::cout);
-    for (int i = 0; i < m.length(); ++i) {
-        for (int j = 0; j < m[0].length(); ++j) {
-            std::cout.width(15);
-            std::cout << m[j][i];
-        }
-        std::cout << std::endl;
-    }
-
-    std::cout.width(prev_width);
-}
-
-template <int L>
-static void PrintVec(const glm::vec<L, float, glm::packed_highp> &v) {
-    for (int i = 0; i < L - 1; ++i)
-        std::cout << v[i] << ", ";
-    std::cout << v[L-1] << std::endl;
-}
 
 static void ProcessInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
