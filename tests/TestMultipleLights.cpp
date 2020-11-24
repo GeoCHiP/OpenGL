@@ -1,8 +1,10 @@
 #include "TestMultipleLights.h"
 #include "Renderer.h"
+#include "PerspectiveCamera.h"
 
 #include "GLFW/glfw3.h"
 #include "imgui/imgui.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace test {
 
@@ -134,8 +136,9 @@ namespace test {
         };
 
         m_ContainerShader->Bind();
-        const glm::vec3 &cameraPosition = camera.GetPosition();
-        const glm::vec3 &cameraDirection = camera.GetFront();
+        const PerspectiveCamera *perspectiveCamera = dynamic_cast<const PerspectiveCamera*>(&camera);
+        const glm::vec3 &cameraPosition = perspectiveCamera->GetPosition();
+        const glm::vec3 &cameraDirection = perspectiveCamera->GetFront();
 
         m_ContainerShader->SetUniform3f("u_ViewerPosition", cameraPosition);
 
@@ -209,10 +212,8 @@ namespace test {
         m_ContainerShader->SetUniform1i("u_Material.specular", 1);
         m_ContainerShader->SetUniform1f("u_Material.shininess", 32.0f);
 
-        glm::mat4 view = camera.GetViewMatrix();
-        glm::mat4 projection = glm::perspective(glm::radians(camera.GetFoV()), aspectRatio, 0.1f, 100.0f);
-        m_ContainerShader->SetUniformMat4f("u_View", view);
-        m_ContainerShader->SetUniformMat4f("u_Projection", projection);
+        const glm::mat4 &viewProjectionMatrix = perspectiveCamera->GetViewProjectionMatrix();
+        m_ContainerShader->SetUniformMat4f("u_ViewProjection", viewProjectionMatrix);
 
         Renderer renderer;
         for(unsigned int i = 0; i < 10; i++) {
@@ -226,8 +227,7 @@ namespace test {
         }
 
         m_PointLightShader->Bind();
-        m_PointLightShader->SetUniformMat4f("u_View", view);
-        m_PointLightShader->SetUniformMat4f("u_Projection", projection);
+        m_PointLightShader->SetUniformMat4f("u_ViewProjection", viewProjectionMatrix);
 
         if (m_IsEnabledPointLight) {
             for (int i = 0; i < 4; ++i) {

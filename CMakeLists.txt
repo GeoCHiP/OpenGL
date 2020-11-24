@@ -26,10 +26,11 @@ set(OPENGL_SOURCES
     src/VertexArray.cpp
     src/Shader.cpp
     src/Texture.cpp
-    src/Camera.cpp
+    src/PerspectiveCamera.cpp
     tests/Test.cpp
     tests/TestMultipleLights.cpp
-    tests/TestTriangle.cpp)
+    tests/TestTriangle.cpp
+    tests/TestBatchRendering.cpp)
 
 set(OPENGL_HEADERS
     src/Renderer.h
@@ -40,9 +41,11 @@ set(OPENGL_HEADERS
     src/Shader.h
     src/Texture.h
     src/Camera.h
+    src/PerspectiveCamera.h
     tests/Test.h
     tests/TestMultipleLights.h
-    tests/TestTriangle.h)
+    tests/TestTriangle.h
+    tests/TestBatchRendering.h)
 
 add_executable(OpenGL ${OPENGL_SOURCES} ${OPENGL_HEADERS})
 

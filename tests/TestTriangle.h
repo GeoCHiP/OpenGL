@@ -16,7 +16,7 @@ namespace test {
         ~TestTriangle() override;
 
         void OnUpdate(float elapsedTime) override;
-        void OnRender(const Camera &camera = Camera(), float aspectRatio = 4.0f / 3.0f) override;
+        void OnRender(const Camera &camera, float aspectRatio = 4.0f / 3.0f) override;
         void OnImGuiRender() override;
 
     private:

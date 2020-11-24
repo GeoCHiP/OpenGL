@@ -10,11 +10,10 @@ out vec3 v_Normal;
 out vec3 v_FragmentPosition;
 
 uniform mat4 u_Model;
-uniform mat4 u_View;
-uniform mat4 u_Projection;
+uniform mat4 u_ViewProjection;
 
 void main() {
-    gl_Position = u_Projection * u_View * u_Model * a_Position;
+    gl_Position = u_ViewProjection * u_Model * a_Position;
     v_TexCoords = a_TexCoords;
     v_Normal = mat3(transpose(inverse(u_Model))) * a_Normal;
     v_FragmentPosition = (u_Model * a_Position).xyz;

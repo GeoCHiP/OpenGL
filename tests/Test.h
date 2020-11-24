@@ -15,7 +15,7 @@ namespace test {
         virtual ~Test() {}
 
         virtual void OnUpdate(float elapsedTime) {}
-        virtual void OnRender(const Camera &camera = Camera(), float aspectRatio = 4.0f / 3.0f) {}
+        virtual void OnRender(const Camera &camera, float aspectRatio = 4.0f / 3.0f) {}
         virtual void OnImGuiRender() {}
     };
 
@@ -28,7 +28,7 @@ namespace test {
 
         template <typename T>
         void RegisterTest(const std::string &name) {
-            std::cout << "Registered test \"" << name << "\"" << std::endl;
+            std::cout << "Registering test \"" << name << '\"' << std::endl;
             m_Tests.push_back(std::make_pair(name, [](){ return new T(); }));
         }
 

@@ -10,10 +10,11 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "Texture.h"
-#include "Camera.h"
+#include "PerspectiveCamera.h"
 
 #include "tests/TestMultipleLights.h"
 #include "tests/TestTriangle.h"
+#include "tests/TestBatchRendering.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -22,8 +23,6 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
-
-static Camera s_Camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
 static float s_Width = 800.0f;
 static float s_Height = 600.0f;
@@ -37,23 +36,26 @@ static float s_LastY = s_Height / 2;
 static float s_ElapsedTime = 0.0f;
 static float s_LastFrame = 0.0f;
 
+static PerspectiveCamera s_PerspectiveCamera(glm::vec3(0.0f, 0.0f, 5.0f),
+        glm::vec3(0.0f, 0.0f, 4.0f), glm::vec3(0.0f, 1.0f, 0.0f), 45.0f, s_Width / s_Height);
+
 
 static void ProcessInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        s_Camera.ProcessKeyboard(CameraMovement::Forward, s_ElapsedTime);
+        s_PerspectiveCamera.ProcessKeyboard(CameraMovement::Forward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        s_Camera.ProcessKeyboard(CameraMovement::Backward, s_ElapsedTime);
+        s_PerspectiveCamera.ProcessKeyboard(CameraMovement::Backward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        s_Camera.ProcessKeyboard(CameraMovement::Leftward, s_ElapsedTime);
+        s_PerspectiveCamera.ProcessKeyboard(CameraMovement::Leftward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        s_Camera.ProcessKeyboard(CameraMovement::Rightward, s_ElapsedTime);
+        s_PerspectiveCamera.ProcessKeyboard(CameraMovement::Rightward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-        s_Camera.ProcessKeyboard(CameraMovement::Upward, s_ElapsedTime);
+        s_PerspectiveCamera.ProcessKeyboard(CameraMovement::Upward, s_ElapsedTime);
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-        s_Camera.ProcessKeyboard(CameraMovement::Downward, s_ElapsedTime);
+        s_PerspectiveCamera.ProcessKeyboard(CameraMovement::Downward, s_ElapsedTime);
 }
 
 static void FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
@@ -75,13 +77,13 @@ static void MouseMoveCallback(GLFWwindow *window, double xPos, double yPos) {
         float yOffset = s_LastY - yPos;
         s_LastY = yPos;
 
-        s_Camera.ProcessMouseMovement(xOffset, yOffset);
+        s_PerspectiveCamera.ProcessMouseMovement(xOffset, yOffset);
     }
 }
 
 static void MouseScrollCallback(GLFWwindow *window, double xOffset, double yOffset) {
     if (!s_EnableCursor)
-        s_Camera.ProcessMouseScroll(static_cast<float>(yOffset));
+        s_PerspectiveCamera.ProcessMouseScroll(static_cast<float>(yOffset));
 }
 
 static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -159,6 +161,7 @@ int main() {
 
     testMenu->RegisterTest<test::TestMultipleLights>("Multiple lights");
     testMenu->RegisterTest<test::TestTriangle>("Hello, triangle");
+    testMenu->RegisterTest<test::TestBatchRendering>("BatchRendering");
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
@@ -176,7 +179,7 @@ int main() {
 
         if (currentTest) {
             currentTest->OnUpdate(s_ElapsedTime);
-            currentTest->OnRender(s_Camera, s_Width / s_Height);
+            currentTest->OnRender(s_PerspectiveCamera, s_Width / s_Height);
             ImGui::Begin("Test");
             if (currentTest != testMenu && ImGui::Button("<-")) {
                 delete currentTest;
