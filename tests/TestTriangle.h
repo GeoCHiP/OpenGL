@@ -5,6 +5,7 @@
 #include "VertexArray.h"
 #include "VertexBuffer.h"
 #include "Shader.h"
+#include "OrthographicCamera.h"
 
 #include <memory>
 
@@ -15,8 +16,8 @@ namespace test {
         TestTriangle();
         ~TestTriangle() override;
 
-        void OnUpdate(float elapsedTime) override;
-        void OnRender(const Camera &camera, float aspectRatio = 4.0f / 3.0f) override;
+        void OnUpdate(GLFWwindow *window, float elapsedTime) override;
+        void OnRender() override;
         void OnImGuiRender() override;
 
     private:
@@ -24,6 +25,7 @@ namespace test {
         std::unique_ptr<VertexArray> m_VAO;
         std::unique_ptr<VertexBuffer> m_VBO;
         std::unique_ptr<Shader> m_Shader;
+        std::unique_ptr<OrthographicCamera> m_OrthoCamera;
     };
 
 }

@@ -2,7 +2,6 @@
 #include "Renderer.h"
 #include "PerspectiveCamera.h"
 
-#include "GLFW/glfw3.h"
 #include "imgui/imgui.h"
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -97,6 +96,8 @@ namespace test {
             -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
             -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
         };
+        m_PerspectiveCamera = std::make_unique<PerspectiveCamera>(glm::vec3(0.0f, 0.0f, 5.0f),
+                glm::vec3(0.0f, 0.0f, 4.0f), glm::vec3(0.0f, 1.0f, 0.0f), 45.0f, 800.0f / 600.0f);
         m_ContainerVAO = std::make_unique<VertexArray>();
         m_PointLightVAO = std::make_unique<VertexArray>();
         m_CubeVBO = std::make_unique<VertexBuffer>(cubeVertices, sizeof(cubeVertices));
@@ -117,9 +118,26 @@ namespace test {
 
     TestMultipleLights::~TestMultipleLights() {}
 
-    void TestMultipleLights::OnUpdate(float elapsedTime) {}
+    void TestMultipleLights::OnUpdate(GLFWwindow *window, float elapsedTime) {
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            m_PerspectiveCamera->ProcessKeyboard(CameraMovement::Forward, elapsedTime);
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            m_PerspectiveCamera->ProcessKeyboard(CameraMovement::Backward, elapsedTime);
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            m_PerspectiveCamera->ProcessKeyboard(CameraMovement::Leftward, elapsedTime);
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            m_PerspectiveCamera->ProcessKeyboard(CameraMovement::Rightward, elapsedTime);
+        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+            m_PerspectiveCamera->ProcessKeyboard(CameraMovement::Upward, elapsedTime);
+        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+            m_PerspectiveCamera->ProcessKeyboard(CameraMovement::Downward, elapsedTime);
 
-    void TestMultipleLights::OnRender(const Camera &camera, float aspectRatio) {
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+        m_PerspectiveCamera->SetAspectRatio((float)width / height);
+    }
+
+    void TestMultipleLights::OnRender() {
         GLCall(glEnable(GL_DEPTH_TEST));
 
         glm::vec3 containerPositions[] = {
@@ -136,9 +154,8 @@ namespace test {
         };
 
         m_ContainerShader->Bind();
-        const PerspectiveCamera *perspectiveCamera = dynamic_cast<const PerspectiveCamera*>(&camera);
-        const glm::vec3 &cameraPosition = perspectiveCamera->GetPosition();
-        const glm::vec3 &cameraDirection = perspectiveCamera->GetFront();
+        const glm::vec3 &cameraPosition = m_PerspectiveCamera->GetPosition();
+        const glm::vec3 &cameraDirection = m_PerspectiveCamera->GetFront();
 
         m_ContainerShader->SetUniform3f("u_ViewerPosition", cameraPosition);
 
@@ -212,7 +229,7 @@ namespace test {
         m_ContainerShader->SetUniform1i("u_Material.specular", 1);
         m_ContainerShader->SetUniform1f("u_Material.shininess", 32.0f);
 
-        const glm::mat4 &viewProjectionMatrix = perspectiveCamera->GetViewProjectionMatrix();
+        const glm::mat4 &viewProjectionMatrix = m_PerspectiveCamera->GetViewProjectionMatrix();
         m_ContainerShader->SetUniformMat4f("u_ViewProjection", viewProjectionMatrix);
 
         Renderer renderer;

@@ -15,8 +15,10 @@ public:
 
     void SetPosition(const glm::vec3 &position) { m_Position = position; RecalculateViewMatrix(); }
     void SetRotation(float rotation) { m_Rotation = rotation; RecalculateViewMatrix(); }
+    void SetAspectRatio(float aspectRatio) { m_AspectRatio = aspectRatio; }
 
     float GetRotation() const { return m_Rotation; }
+    float GetAspectRatio() const { return m_AspectRatio; }
 
     const glm::vec3 &GetPosition() const override { return m_Position; }
     const glm::mat4 &GetViewMatrix() const override { return m_ViewMatrix; }
@@ -29,4 +31,5 @@ private:
 private:
     float m_Rotation;
     float m_Speed;
+    float m_AspectRatio;
 };

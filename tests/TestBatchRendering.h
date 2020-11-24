@@ -17,8 +17,8 @@ namespace test {
         TestBatchRendering();
         ~TestBatchRendering();
 
-        void OnUpdate(float elapsedTime) override;
-        void OnRender(const Camera &camera, float aspectRatio) override;
+        void OnUpdate(GLFWwindow *window, float elapsedTime) override;
+        void OnRender() override;
         void OnImGuiRender() override;
 
     private:
@@ -28,6 +28,7 @@ namespace test {
         std::unique_ptr<Shader> m_Shader;
         std::unique_ptr<Texture> m_TextureA;
         std::unique_ptr<Texture> m_TextureB;
+        std::unique_ptr<OrthographicCamera> m_OrthoCamera;
     };
 
 }

@@ -36,10 +36,11 @@ static float s_LastY = s_Height / 2;
 static float s_ElapsedTime = 0.0f;
 static float s_LastFrame = 0.0f;
 
+static OrthographicCamera s_OrthographicCamera(-2.0f, 2.0f, -2.0f, 2.0f);
 static PerspectiveCamera s_PerspectiveCamera(glm::vec3(0.0f, 0.0f, 5.0f),
         glm::vec3(0.0f, 0.0f, 4.0f), glm::vec3(0.0f, 1.0f, 0.0f), 45.0f, s_Width / s_Height);
 
-static OrthographicCamera s_OrthographicCamera(-2.0f, 2.0f, -2.0f, 2.0f);
+static const Camera *s_Cameras[2] = { &s_OrthographicCamera, &s_PerspectiveCamera };
 
 static void ProcessInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -188,8 +189,8 @@ int main() {
         ImGui::NewFrame();
 
         if (currentTest) {
-            currentTest->OnUpdate(s_ElapsedTime);
-            currentTest->OnRender(s_OrthographicCamera, s_Width / s_Height);
+            currentTest->OnUpdate(window, s_ElapsedTime);
+            currentTest->OnRender();
             ImGui::Begin("Test");
             if (currentTest != testMenu && ImGui::Button("<-")) {
                 delete currentTest;

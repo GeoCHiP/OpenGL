@@ -8,6 +8,7 @@ namespace test {
 
     TestTriangle::TestTriangle()
     : m_Color { 0.2f, 0.3f, 0.8f } {
+        m_OrthoCamera = std::make_unique<OrthographicCamera>(-2.0f, 2.0f, -2.0f, 2.0f);
         float vertices[] {
             -0.5f, -0.5f, 0.0f,
              0.5f, -0.5f, 0.0f,
@@ -24,12 +25,30 @@ namespace test {
 
     TestTriangle::~TestTriangle() {}
 
-    void TestTriangle::OnUpdate(float elapsedTime) {}
+    void TestTriangle::OnUpdate(GLFWwindow *window, float elapsedTime) {
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            m_OrthoCamera->ProcessKeyboard(CameraMovement::Upward, elapsedTime);
 
-    void TestTriangle::OnRender(const Camera &camera, float aspectRatio) {
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            m_OrthoCamera->ProcessKeyboard(CameraMovement::Downward, elapsedTime);
+
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+          m_OrthoCamera->ProcessKeyboard(CameraMovement::Leftward, elapsedTime);
+
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            m_OrthoCamera->ProcessKeyboard(CameraMovement::Rightward, elapsedTime);
+        
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+        m_OrthoCamera->SetAspectRatio((float)width / height);
+    }
+
+    void TestTriangle::OnRender() {
         Renderer renderer;
         m_Shader->Bind();
         m_Shader->SetUniform3f("u_Color", glm::vec3(m_Color[0], m_Color[1], m_Color[2]));
+        m_Shader->SetUniform1f("u_AspectRatio", m_OrthoCamera->GetAspectRatio());
+        m_Shader->SetUniformMat4f("u_ViewProjection", m_OrthoCamera->GetViewProjectionMatrix());
         renderer.DrawArrays(*m_VAO, *m_Shader, 0, 3);
     }
 

@@ -7,7 +7,7 @@
 #include "VertexBufferLayout.h"
 #include "Texture.h"
 #include "Shader.h"
-#include "Camera.h"
+#include "PerspectiveCamera.h"
 
 #include "glm/glm.hpp"
 
@@ -20,8 +20,8 @@ namespace test {
         TestMultipleLights();
         ~TestMultipleLights() override;
 
-        void OnUpdate(float elapsedTime) override;
-        void OnRender(const Camera &camera, float aspectRatio);
+        void OnUpdate(GLFWwindow *window, float elapsedTime) override;
+        void OnRender();
         void OnImGuiRender() override;
 
     private:
@@ -57,6 +57,7 @@ namespace test {
         std::unique_ptr<Texture> m_SpecularMap;
         std::unique_ptr<Shader> m_ContainerShader;
         std::unique_ptr<Shader> m_PointLightShader;
+        std::unique_ptr<PerspectiveCamera> m_PerspectiveCamera;
     };
 
 }

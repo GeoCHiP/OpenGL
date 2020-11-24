@@ -5,7 +5,8 @@
 #include <string>
 #include <iostream>
 
-#include "Camera.h"
+#include <GL/glew.h>
+#include "GLFW/glfw3.h"
 
 namespace test {
 
@@ -14,8 +15,8 @@ namespace test {
         Test() {}
         virtual ~Test() {}
 
-        virtual void OnUpdate(float elapsedTime) {}
-        virtual void OnRender(const Camera &camera, float aspectRatio = 4.0f / 3.0f) {}
+        virtual void OnUpdate(GLFWwindow *window, float elapsedTime) {}
+        virtual void OnRender() {}
         virtual void OnImGuiRender() {}
     };
 
