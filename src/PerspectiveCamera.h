@@ -12,6 +12,8 @@ public:
     void ProcessMouseMovement(float xOffset, float yOffset, bool constrainPitch = true);
     void ProcessMouseScroll(float yOffset);
 
+    void SetAspectRatio(float newAspectRatio) { m_AspectRatio = newAspectRatio; RecalculateProjectionMatrix(); }
+
     const glm::vec3 &GetFront() const { return m_Front; }
     float GetFoV() const { return m_FoV; }
     float GetAspectRatio() const { return m_AspectRatio; }

@@ -8,7 +8,7 @@ enum class CameraMovement {
 
 class Camera {
 public:
-    Camera(const glm::vec3 position) : m_Position(position) {}
+    Camera(const glm::vec3 &position) : m_Position(position) {}
     virtual ~Camera() {}
 
     virtual const glm::vec3 &GetPosition() const = 0;

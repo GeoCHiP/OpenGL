@@ -51,7 +51,7 @@ namespace test {
         const OrthographicCamera *orthoCamera = dynamic_cast<const OrthographicCamera*>(&camera);
         m_Shader->Bind();
         m_Shader->SetUniform1f("u_AspectRatio", aspectRatio);
-
+        m_Shader->SetUniformMat4f("u_ViewProjection", orthoCamera->GetViewProjectionMatrix());
         Renderer renderer;
         renderer.DrawElements(*m_VAO, *m_EBO, *m_Shader);
     }

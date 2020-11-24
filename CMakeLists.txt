@@ -27,6 +27,7 @@ set(OPENGL_SOURCES
     src/Shader.cpp
     src/Texture.cpp
     src/PerspectiveCamera.cpp
+    src/OrthographicCamera.cpp
     tests/Test.cpp
     tests/TestMultipleLights.cpp
     tests/TestTriangle.cpp
@@ -42,6 +43,7 @@ set(OPENGL_HEADERS
     src/Texture.h
     src/Camera.h
     src/PerspectiveCamera.h
+    src/OrthographicCamera.h
     tests/Test.h
     tests/TestMultipleLights.h
     tests/TestTriangle.h

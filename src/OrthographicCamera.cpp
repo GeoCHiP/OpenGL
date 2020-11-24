@@ -1,9 +1,12 @@
 #include "OrthographicCamera.h"
 
+// Default camera values
+static const float DEF_SPEED = 2.5f;
+
 OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top)
-    : m_ProjectionMatrix(glm::ortho(left, right, bottom, top, -1.0f, 1.0f)),
-    m_ViewMatrix(glm::mat4(1.0f)),
-    m_Speed(1.0f) {
+    : Camera(glm::vec3(0.0f, 0.0f, 0.0f)), m_Speed(DEF_SPEED) {
+        m_ViewMatrix = glm::mat4(1.0f);
+        m_ProjectionMatrix = glm::ortho(left, right, bottom, top);
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 }
 

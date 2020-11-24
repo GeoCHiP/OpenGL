@@ -5,7 +5,7 @@
 
 #include "Camera.h"
 
-class OrthographicCamera {
+class OrthographicCamera : public Camera {
 public:
     OrthographicCamera(float left, float right, float bottom, float top);
     ~OrthographicCamera();
@@ -18,19 +18,15 @@ public:
 
     float GetRotation() const { return m_Rotation; }
 
-    const glm::vec3 &GetPosition() const { return m_Position; }
-    const glm::mat4 &GetViewMatrix() const { return m_ViewMatrix; }
-    const glm::mat4 &GetProjectionMatrix() const { return m_ProjectionMatrix; }
-    const glm::mat4 &GetVeiwProjectionMatrix() const { return m_ViewProjectionMatrix; }
+    const glm::vec3 &GetPosition() const override { return m_Position; }
+    const glm::mat4 &GetViewMatrix() const override { return m_ViewMatrix; }
+    const glm::mat4 &GetProjectionMatrix() const override { return m_ProjectionMatrix; }
+    const glm::mat4 &GetViewProjectionMatrix() const override { return m_ViewProjectionMatrix; }
 
 private:
     void RecalculateViewMatrix();
 
 private:
-    glm::vec3 m_Position;
     float m_Rotation;
     float m_Speed;
-    glm::mat4 m_ViewMatrix;
-    glm::mat4 m_ProjectionMatrix;
-    glm::mat4 m_ViewProjectionMatrix;
 };
