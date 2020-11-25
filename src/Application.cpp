@@ -1,5 +1,5 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "GL/glew.h"
+#include "GLFW/glfw3.h"
 
 #include <iostream>
 
@@ -15,6 +15,7 @@
 #include "tests/TestMultipleLights.h"
 #include "tests/TestTriangle.h"
 #include "tests/TestBatchRendering.h"
+#include "tests/TestModelLoading.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -141,6 +142,7 @@ int main() {
     testMenu->RegisterTest<test::TestMultipleLights>("Multiple lights");
     testMenu->RegisterTest<test::TestTriangle>("Hello, triangle");
     testMenu->RegisterTest<test::TestBatchRendering>("Batch rendering");
+    testMenu->RegisterTest<test::TestModelLoading>("Model loading");
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
