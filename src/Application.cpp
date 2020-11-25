@@ -140,7 +140,7 @@ int main() {
 
     testMenu->RegisterTest<test::TestMultipleLights>("Multiple lights");
     testMenu->RegisterTest<test::TestTriangle>("Hello, triangle");
-    testMenu->RegisterTest<test::TestBatchRendering>("BatchRendering");
+    testMenu->RegisterTest<test::TestBatchRendering>("Batch rendering");
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
