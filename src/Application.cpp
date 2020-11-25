@@ -36,43 +36,16 @@ static float s_LastY = s_Height / 2;
 static float s_ElapsedTime = 0.0f;
 static float s_LastFrame = 0.0f;
 
-static OrthographicCamera s_OrthographicCamera(-2.0f, 2.0f, -2.0f, 2.0f);
-static PerspectiveCamera s_PerspectiveCamera(glm::vec3(0.0f, 0.0f, 5.0f),
-        glm::vec3(0.0f, 0.0f, 4.0f), glm::vec3(0.0f, 1.0f, 0.0f), 45.0f, s_Width / s_Height);
-
-static const Camera *s_Cameras[2] = { &s_OrthographicCamera, &s_PerspectiveCamera };
 
 static void ProcessInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        s_PerspectiveCamera.ProcessKeyboard(CameraMovement::Forward, s_ElapsedTime);
-        s_OrthographicCamera.ProcessKeyboard(CameraMovement::Upward, s_ElapsedTime);
-    }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        s_PerspectiveCamera.ProcessKeyboard(CameraMovement::Backward, s_ElapsedTime);
-        s_OrthographicCamera.ProcessKeyboard(CameraMovement::Downward, s_ElapsedTime);
-    }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        s_PerspectiveCamera.ProcessKeyboard(CameraMovement::Leftward, s_ElapsedTime);
-        s_OrthographicCamera.ProcessKeyboard(CameraMovement::Leftward, s_ElapsedTime);
-    }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        s_PerspectiveCamera.ProcessKeyboard(CameraMovement::Rightward, s_ElapsedTime);
-        s_OrthographicCamera.ProcessKeyboard(CameraMovement::Rightward, s_ElapsedTime);
-    }
-    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-        s_PerspectiveCamera.ProcessKeyboard(CameraMovement::Upward, s_ElapsedTime);
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-        s_PerspectiveCamera.ProcessKeyboard(CameraMovement::Downward, s_ElapsedTime);
 }
 
 static void FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
     GLCall(glViewport(0, 0, width, height));
     s_Width = width;
     s_Height = height;
-    s_PerspectiveCamera.SetAspectRatio(s_Width / s_Height);
 }
 
 static void MouseMoveCallback(GLFWwindow *window, double xPos, double yPos) {
@@ -87,15 +60,10 @@ static void MouseMoveCallback(GLFWwindow *window, double xPos, double yPos) {
         s_LastX = xPos;
         float yOffset = s_LastY - yPos;
         s_LastY = yPos;
-
-        s_PerspectiveCamera.ProcessMouseMovement(xOffset, yOffset);
     }
 }
 
-static void MouseScrollCallback(GLFWwindow *window, double xOffset, double yOffset) {
-    if (!s_EnableCursor)
-        s_PerspectiveCamera.ProcessMouseScroll(static_cast<float>(yOffset));
-}
+static void MouseScrollCallback(GLFWwindow *window, double xOffset, double yOffset) {}
 
 static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_F11 && action == GLFW_PRESS) {

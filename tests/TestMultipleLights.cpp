@@ -135,6 +135,22 @@ namespace test {
         int width, height;
         glfwGetWindowSize(window, &width, &height);
         m_PerspectiveCamera->SetAspectRatio((float)width / height);
+
+        static bool s_IsEnabledCursor = true;
+        static bool s_IsFirstMouse = true;
+        static float s_LastX, s_LastY;
+        static double xPos, yPos;
+        glfwGetCursorPos(window, &xPos, &yPos);
+        if (s_IsFirstMouse) {
+            s_LastX = xPos;
+            s_LastY = yPos;
+            s_IsFirstMouse = false;
+        }
+        float xOffset = xPos - s_LastX;
+        float yOffset = s_LastY - yPos;
+        s_LastX = xPos;
+        s_LastY = yPos;
+        m_PerspectiveCamera->ProcessMouseMovement(xOffset, yOffset);
     }
 
     void TestMultipleLights::OnRender() {

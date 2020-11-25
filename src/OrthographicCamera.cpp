@@ -4,7 +4,7 @@
 static const float DEF_SPEED = 2.5f;
 
 OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top)
-    : Camera(glm::vec3(0.0f, 0.0f, 0.0f)), m_Speed(DEF_SPEED) {
+    : Camera(glm::vec3(0.0f, 0.0f, 0.0f)), m_Speed(DEF_SPEED), m_Rotation(0.0f) {
         m_ViewMatrix = glm::mat4(1.0f);
         m_ProjectionMatrix = glm::ortho(left, right, bottom, top);
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
