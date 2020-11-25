@@ -11,12 +11,14 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "GLFW lib only" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "GLFW lib only" FORCE)
 
 set(BUILD_UTILS OFF CACHE BOOL "GLEW lib only" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Static libs only" FORCE)
 
 add_subdirectory("vendor/glfw")
 add_subdirectory("vendor/glew/build/cmake")
 add_subdirectory("vendor/glm")
 add_subdirectory("vendor/stb_image")
 add_subdirectory("vendor/imgui")
+add_subdirectory("vendor/assimp")
 
 set(OPENGL_SOURCES
     src/Application.cpp
@@ -58,9 +60,10 @@ target_include_directories(OpenGL
                            PRIVATE "vendor/glew/include"
                            PRIVATE "vendor/stb_image"
                            PRIVATE "vendor/glm"
-                           PRIVATE "vendor/imgui")
+                           PRIVATE "vendor/imgui"
+                           PRIVATE "vendor/assimp/include")
 
-target_link_libraries(OpenGL ${OPENGL_LIBRARIES} glfw glew_s stb_image glm imgui)
+target_link_libraries(OpenGL ${OPENGL_LIBRARIES} glfw glew_s stb_image glm imgui assimp)
 
 target_compile_definitions(OpenGL
                            PRIVATE "GLEW_NO_GLU=1"
