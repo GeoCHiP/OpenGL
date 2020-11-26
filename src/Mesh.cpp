@@ -29,7 +29,7 @@ void Mesh::SetupMesh() {
     GLCall(glEnableVertexAttribArray(1));
     GLCall(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Normal)));
 
-    GLCall(glEnableVertexAttribArray(0));
+    GLCall(glEnableVertexAttribArray(2));
     GLCall(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord)));
 
     GLCall(glBindVertexArray(0));
@@ -50,9 +50,10 @@ void Mesh::Draw(Shader &shader) {
         shader.SetUniform1i(type + number, i);
         GLCall(glBindTexture(GL_TEXTURE_2D, Textures[i].Id));
     }
-    GLCall(glActiveTexture(GL_TEXTURE0));
 
     GLCall(glBindVertexArray(m_VAO));
     GLCall(glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, nullptr));
     GLCall(glBindVertexArray(0));
+
+    GLCall(glActiveTexture(GL_TEXTURE0));
 }

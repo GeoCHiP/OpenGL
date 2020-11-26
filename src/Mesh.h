@@ -16,7 +16,7 @@ struct Vertex {
 struct TextureInfo {
     unsigned int Id;
     std::string Type;
-    std::string FilePath;
+    std::string FileName;
 };
 
 class Mesh {

@@ -11,13 +11,14 @@ uniform mat4 u_Model;
 uniform mat4 u_ViewProjection;
 
 void main() {
-    gl_Position = u_ViewProjection * u_Model * a_Position;
+    gl_Position = u_ViewProjection * u_Model * vec4(a_Position, 1.0f);
+    v_TexCoord = a_TexCoord;
 }
 
 #shader fragment
 #version 330 core
 
-layout (location = 0)  out vec4 o_Color;
+layout (location = 0) out vec4 o_Color;
 
 in vec2 v_TexCoord;
 

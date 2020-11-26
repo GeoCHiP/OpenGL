@@ -93,7 +93,7 @@ std::vector<TextureInfo> Model::LoadMaterialTextures(aiMaterial *material, aiTex
         
         bool skip = false;
         for (unsigned int j = 0; j < m_TexturesLoaded.size(); ++j) {
-            if (std::strcmp(m_TexturesLoaded[j].FilePath.c_str(), str.C_Str())) {
+            if (std::strcmp(m_TexturesLoaded[j].FileName.c_str(), str.C_Str()) == 0) {
                 textures.push_back(m_TexturesLoaded[j]);
                 skip = true;
                 break;
@@ -104,8 +104,9 @@ std::vector<TextureInfo> Model::LoadMaterialTextures(aiMaterial *material, aiTex
             TextureInfo texture;
             texture.Id = TextureFromFile(str.C_Str(), m_FileDirectory);
             texture.Type = typeName;
-            texture.FilePath = str.C_Str();
+            texture.FileName = str.C_Str();
             textures.push_back(texture);
+            m_TexturesLoaded.push_back(texture);
         }
     }
 

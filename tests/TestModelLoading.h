@@ -3,6 +3,7 @@
 #include "Test.h"
 #include "Model.h"
 #include "Shader.h"
+#include "PerspectiveCamera.h"
 
 #include <memory>
 
@@ -19,6 +20,7 @@ namespace test {
     private:
         std::unique_ptr<Model> m_Model;
         std::unique_ptr<Shader> m_Shader;
+        std::unique_ptr<PerspectiveCamera> m_PerspectiveCamera;
     };
 
 }
