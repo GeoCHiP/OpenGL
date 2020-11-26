@@ -21,6 +21,13 @@ namespace test {
         std::unique_ptr<Model> m_Model;
         std::unique_ptr<Shader> m_Shader;
         std::unique_ptr<PerspectiveCamera> m_PerspectiveCamera;
+        glm::vec3 m_PointLightPositions;
+        glm::vec3 m_PointLightAmbient;
+        glm::vec3 m_PointLightDiffuse;
+        glm::vec3 m_PointLightSpecular;
+        float m_PointLightConstant;
+        float m_PointLightLinear;
+        float m_PointLightQuadratic;
     };
 
 }

@@ -87,10 +87,10 @@ void main() {
     color += CalcDirLight(u_DirLight, normal, viewDirection);
 
     for (int i = 0; i < NR_POINT_LIGHTS; ++i) {
-        color += CalcPointLight(u_PointLights[i], normal, v_FragmentPosition, viewDirection);
+        color += CalcPointLight(u_PointLights[i], normal, viewDirection, v_FragmentPosition);
     }
 
-    color += CalcSpotLight(u_SpotLight, normal, v_FragmentPosition, viewDirection);
+    color += CalcSpotLight(u_SpotLight, normal, viewDirection, v_FragmentPosition);
 
     fragColor = vec4(color, 1.0f);
 }
@@ -113,7 +113,7 @@ vec3 CalcDirLight(DirectionalLight dirLight, vec3 normal, vec3 viewDirection) {
     return (ambient + diffuse + specular);
 }
 
-vec3 CalcPointLight(PointLight pointLight, vec3 normal, vec3 fragPosition, vec3 viewDirection) {
+vec3 CalcPointLight(PointLight pointLight, vec3 normal, vec3 viewDirection, vec3 fragPosition) {
     vec3 lightDirection = normalize(pointLight.position - fragPosition);
 
     // ambient shading
@@ -135,7 +135,7 @@ vec3 CalcPointLight(PointLight pointLight, vec3 normal, vec3 fragPosition, vec3 
     return (ambient + diffuse + specular) * attenuation;
 }
 
-vec3 CalcSpotLight(SpotLight spotLight, vec3 normal, vec3 fragPosition, vec3 viewDirection) {
+vec3 CalcSpotLight(SpotLight spotLight, vec3 normal, vec3 viewDirection, vec3 fragPosition) {
     vec3 lightDirection = normalize(spotLight.position - fragPosition);
 
     // ambient shading
