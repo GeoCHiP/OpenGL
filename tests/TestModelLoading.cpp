@@ -8,8 +8,8 @@ namespace test {
     TestModelLoading::TestModelLoading() 
             : m_PointLightPositions { 0.7f, 0.2f, 2.0f },
             m_PointLightAmbient { 0.1f, 0.1f, 0.1f },
-            m_PointLightDiffuse { 0.2f, 0.3f, 0.8f },
-            m_PointLightSpecular { 0.2f, 0.3f, 0.8f },
+            m_PointLightDiffuse { 0.7f, 0.7f, 0.7f },
+            m_PointLightSpecular { 0.7f, 0.7f, 0.7f },
             m_PointLightConstant(1.0f),
             m_PointLightLinear(0.09f),
             m_PointLightQuadratic(0.032f) {
@@ -61,7 +61,7 @@ namespace test {
         m_Shader->Bind();
     
         glm::mat4 model(1.0f);
-        model = glm::scale(model, glm::vec3(1.0f));
+        model = glm::scale(model, glm::vec3(0.3f));
         m_Shader->SetUniformMat4f("u_Model", model);
         m_Shader->SetUniformMat4f("u_ViewProjection", m_PerspectiveCamera->GetViewProjectionMatrix());
 
