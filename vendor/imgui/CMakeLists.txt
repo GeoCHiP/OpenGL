@@ -19,14 +19,15 @@ set(IMGUI_HEADERS
     imgui/imstb_textedit.h
     imgui/imstb_truetype.h)
 
-add_library(imgui ${IMGUI_SOURCES} ${IMGUI_HEADERS})
+add_library(imgui SHARED ${IMGUI_SOURCES} ${IMGUI_HEADERS})
 
 target_include_directories(imgui
                            PRIVATE "${CMAKE_SOURCE_DIR}/vendor/glfw/include"
                            PRIVATE "${CMAKE_SOURCE_DIR}/vendor/glew/include")
 
+target_link_libraries(imgui PRIVATE glew glfw)
+
 target_compile_definitions(imgui
-                           PRIVATE "GLEW_NO_GLU=1"
-                           PRIVATE "GLEW_STATIC=1")
+                           PRIVATE "GLEW_NO_GLU=1")
 
 message(STATUS "ImGui: v1.79")
