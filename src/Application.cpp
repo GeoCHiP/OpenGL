@@ -73,8 +73,8 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
             s_Height = 600;
             glfwSetWindowMonitor(window, NULL, 0, 0, s_Width, s_Height, GLFW_DONT_CARE);
         } else {
-            s_Width = 1366;
-            s_Height = 768;
+            s_Width = 1920;
+            s_Height = 1080;
             glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, s_Width, s_Height, GLFW_DONT_CARE);
         }
         s_IsFoolScreen = !s_IsFoolScreen;
