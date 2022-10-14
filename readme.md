@@ -2,6 +2,16 @@
 
 This repository is just a little project that I am working on while learning basic rendering techniques using OpenGL and C++.
 
+# Examples
+
+#### Multiple Lights example
+
+![Example Multiple Lights](images/multiple_lights.png)
+
+#### Model Loading example
+
+![Example Model Loading](images/model_loading.png)
+
 # Quick start
 
 1. Clone repo
